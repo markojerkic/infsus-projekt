@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" data-theme="light">
+
+<head th:replace="fragments/layout.html :: headerfiles">
+</head>
+
+<body>
+
+    <header th:replace="fragments/layout.html :: header"></header>
+
+    <main class="mx-auto w-full">
+
+        <table class="mx-auto table" th:fragment="search-table">
+            <!-- head -->
+            <thead>
+                <tr>
+                    <th>Naziv</th>
+                    <th>Opis</th>
+                    <th>Akcije</th>
+                </tr>
+
+                <tr>
+                    <form class="max-w-[50rem] mx-auto flex flex-col gap-2" hx-get="/genre" hx-select="#genres"
+                        hx-target="#genres" hx-swap="outerHTML" hx-push-url="true"
+                        hx-trigger="input from:input delay:500ms">
+                        <th>
+                            <input type="text" name="name" placeholder="Unesite naziv"
+                                th:value="${searchName != null? searchName: null}" />
+                        </th>
+                        <th>
+                            <input type="text" name="description" placeholder="Unesite opis"
+                                th:value="${searchDescription != null? searchDescription: null}" />
+                        </th>
+                        <th />
+                    </form>
+                </tr>
+
+
+            </thead>
+
+            <tbody id="genres">
+
+                <tr th:each="genre : ${genresPage.content}" th:id="@{genre-{id}(id=${genre.id})}">
+                    <th th:text="${genre.name}">1</th>
+                    <th th:text="${genre.description}">1</th>
+                    <th>
+                        <a th:href="@{/genre/{id}/edit(id=${genre.id})}" class="btn btn-primary">Izmijeni</a>
+                        <a th:hx-delete="@{/genre/{id}(id=${genre.id})}" class="btn btn-error"
+                                hx-include="input"
+                            th:hx-target="@{#genre-{id}(id=${genre.id})}">Obriši</a>
+                    </th>
+                </tr>
+
+                <tr>
+                    <td colspan="3">
+                        <nav class="flex gap-2">
+                            <a th:if="${genresPage.number > 0}"
+                                th:href="@{/genre?page={page}(page=${genresPage.number - 1})}"
+                                class="btn btn-primary">Prethodna</a>
+                            <a th:if="${genresPage.hasNext}"
+                                th:href="@{/genre?page={page}(page=${genresPage.number + 1})}"
+                                class="btn btn-primary">Sljedeća</a>
+                        </nav>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </main>
+</body>
+
+</html>

@@ -1,8 +1,13 @@
 package hr.fer.infsus.controller;
 
+import java.util.Optional;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,11 +32,45 @@ public class GenreController {
 
     private final GenreService genreService;
 
-    @GetMapping
-    public String index(ModelMap model, HttpServletRequest httpServletRequest) {
+    @GetMapping("create")
+    public String create(ModelMap model, HttpServletRequest httpServletRequest) {
         model.addAttribute("currentPage", "genre");
         model.addAttribute("httpServletRequest", httpServletRequest);
         return "genre/create";
+    }
+
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
+
+        this.genreService.deleteGenre(id);
+
+        if (request.getHeader("HX-Request") != null) {
+            log.info("HX-Request");
+            return "fragments/empty";
+        }
+
+        return "redirect:/genre";
+    }
+
+    @GetMapping
+    public String index(@PageableDefault(size = 5) Pageable pageable,
+            Optional<String> name,
+            Optional<String> description,
+            ModelMap model,
+            HttpServletRequest httpServletRequest) {
+
+        var results = this.genreService.getGenres(pageable, name, description);
+
+        model.addAttribute("genresPage", results);
+
+        name.ifPresent(n -> model.addAttribute("searchName", n));
+        description.ifPresent(d -> model.addAttribute("searchDescription", d));
+
+        if (httpServletRequest.getHeader("HX-Request") != null) {
+            return "genre/list :: search-table";
+        }
+
+        return "genre/list";
     }
 
     @GetMapping("/{id}/edit")

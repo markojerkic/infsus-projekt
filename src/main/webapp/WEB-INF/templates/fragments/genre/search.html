@@ -1,0 +1,9 @@
+<tbody id="genres">
+
+    <!-- row 1 -->
+    <tr th:each="genre : ${genresPage.content}">
+        <th th:text="${genre.name}">1</th>
+        <th th:text="${genre.description}">1</th>
+    </tr>
+    <!-- row 2 -->
+</tbody>
