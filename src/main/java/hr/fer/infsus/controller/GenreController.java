@@ -5,6 +5,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +34,23 @@ public class GenreController {
         return "genre/create";
     }
 
+    @GetMapping("/{id}/edit")
+    public String edit(@PathVariable Long id, ModelMap model, HttpServletRequest httpServletRequest) {
+        var genre = this.genreService.getGenreById(id);
+
+        model.addAttribute("genre", genre);
+        return "genre/create";
+    }
+
+    @GetMapping("/{id}")
+    public String genreById(@PathVariable Long id, ModelMap model, HttpServletRequest httpServletRequest) {
+
+        var genre = this.genreService.getGenreById(id);
+
+        model.addAttribute("genre", genre);
+        return "genre/genre";
+    }
+
     @PostMapping
     public String createGenre(@Valid @ModelAttribute("employee") Genre genre,
             BindingResult bindingResult,
@@ -54,10 +72,16 @@ public class GenreController {
             return "errors/validation-error";
         }
 
-        var genreId = this.genreService.createGenre(genre);
+        var createdGenre = this.genreService.createGenre(genre);
 
-        return "redirect:/genre/" + genreId;
+        // response.addHeader("HX-Reselect", "body");
+        // response.addHeader("HX-Retarget", "body");
+        // response.addHeader("HX-Reswap", "outerHTML");
+        response.addHeader("HX-Redirect", "/genre/" + createdGenre.getId());
 
+        model.addAttribute("genre", createdGenre);
+
+        return "genre/genre";
     }
 
 }

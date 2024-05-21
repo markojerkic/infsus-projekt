@@ -11,17 +11,17 @@ import lombok.RequiredArgsConstructor;
 public class GenreService {
     private final GenreRepository genreRepository;
 
-    public long createGenre(Genre genreModel) {
-        if (genreModel.getId() != null) {
-            throw new ValidationException("id", "Id ne smije biti postavljen");
-        }
-
+    public Genre createGenre(Genre genreModel) {
         var genre = Genre.builder()
                 .name(genreModel.getName())
                 .description(genreModel.getDescription())
                 .build();
 
-        return this.genreRepository.save(genre).getId();
+        return this.genreRepository.save(genre);
+    }
+
+    public Genre getGenreById(long genreId) {
+        return this.genreRepository.findById(genreId).orElseThrow();
     }
 
 }

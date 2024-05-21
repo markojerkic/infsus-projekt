@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" data-theme="light">
+
+<head th:replace="fragments/layout.html :: headerfiles">
+</head>
+
+<body>
+
+    <header th:replace="fragments/layout.html :: header"></header>
+
+    <main class="mx-auto w-full">
+
+        <div class="max-w-[50rem] mx-auto flex flex-col gap-2">
+            <div class="grid grid-cols-2">
+                <span class="font-bold">Naziv:</span>
+                <span th:text="${genre.name}"></span>
+                <span class="font-bold" th:if="${genre.description}">Opis:</span>
+                <span th:if="${genre.description}" th:text="${genre.description}"></span>
+            </div>
+            <div class="flex items-center gap-2">
+                <a th:href="@{/genre/{id}/edit(id=${genre.id})}" class="btn btn-primary">Izmijeni</a>
+                <a th:href="@{/genre/{id}/delete(id=${genre.id})}" class="btn btn-error">Obriši</a>
+
+            </div>
+        </div>
+
+
+
+
+    </main>
+</body>
+
+</html>

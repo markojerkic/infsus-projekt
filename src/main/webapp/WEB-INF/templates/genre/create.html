@@ -4,7 +4,7 @@
 <head th:replace="fragments/layout.html :: headerfiles">
 </head>
 
-<body>
+<body #body>
 
     <header th:replace="fragments/layout.html :: header"></header>
 
@@ -13,13 +13,16 @@
         <form hx-post="/genre" class="max-w-[50rem] mx-auto flex flex-col gap-2">
             <label class="input input-bordered flex items-center gap-2">
                 Naziv
-                <input class="grow" type="text" name="name" placeholder="Unesite naziv" />
+                <input class="grow" type="text" name="name" placeholder="Unesite naziv"
+                    th:value="${genre.name != null? genre.name: null}" />
             </label>
             <small data-error="name" class="hidden"></small>
-            <label class="input input-bordered flex items-center gap-2">
+            <label class="textarea textarea-bordered flex items-start gap-2">
                 Opis
-                <input class="grow" type="text" name="description" placeholder="Unesite opis" />
+                <textarea class="grow" type="text" name="description" placeholder="Unesite opis"
+                    th:value="${genre.name != null? genre.name: null}"></textarea>
             </label>
+            <small data-error="description" class="hidden"></small>
 
             <button type="submit" class="btn btn-primary">Dodaj</button>
         </form>
