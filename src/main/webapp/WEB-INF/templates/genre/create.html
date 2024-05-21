@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" data-theme="light">
+
+<head th:replace="fragments/layout.html :: headerfiles">
+</head>
+
+<body>
+
+    <header th:replace="fragments/layout.html :: header"></header>
+
+    <main class="mx-auto w-full">
+
+        <form hx-post="/genre" class="max-w-[50rem] mx-auto flex flex-col gap-2">
+            <label class="input input-bordered flex items-center gap-2">
+                Naziv
+                <input class="grow" type="text" name="name" placeholder="Unesite naziv" />
+            </label>
+            <small data-error="name" class="hidden"></small>
+            <label class="input input-bordered flex items-center gap-2">
+                Opis
+                <input class="grow" type="text" name="description" placeholder="Unesite opis" />
+            </label>
+
+            <button type="submit" class="btn btn-primary">Dodaj</button>
+        </form>
+
+    </main>
+</body>
+
+</html>

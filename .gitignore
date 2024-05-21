@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+tailwind.config.js
+node_modules/
