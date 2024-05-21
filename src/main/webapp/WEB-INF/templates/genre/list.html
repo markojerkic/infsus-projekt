@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" data-theme="light">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" data-theme="light" hx-boost="true">
+
 
 <head th:replace="fragments/layout.html :: headerfiles">
 </head>
 
 <body>
+
 
     <header th:replace="fragments/layout.html :: header"></header>
 
@@ -45,8 +47,7 @@
                     <th th:text="${genre.description}">1</th>
                     <th>
                         <a th:href="@{/genre/{id}/edit(id=${genre.id})}" class="btn btn-primary">Izmijeni</a>
-                        <a th:hx-delete="@{/genre/{id}(id=${genre.id})}" class="btn btn-error"
-                                hx-include="input"
+                        <a th:hx-delete="@{/genre/{id}(id=${genre.id})}" class="btn btn-error" hx-include="input"
                             th:hx-target="@{#genre-{id}(id=${genre.id})}">Obriši</a>
                     </th>
                 </tr>
@@ -60,6 +61,7 @@
                             <a th:if="${genresPage.hasNext}"
                                 th:href="@{/genre?page={page}(page=${genresPage.number + 1})}"
                                 class="btn btn-primary">Sljedeća</a>
+                            <a href="/genre/create" class="btn btn-success">Dodaj</a>
                         </nav>
                     </td>
                 </tr>

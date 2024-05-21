@@ -12,12 +12,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.view.RedirectView;
 
 import hr.fer.infsus.model.types.sif.Genre;
 import hr.fer.infsus.service.sif.GenreService;
+import hr.fer.infsus.util.HtmxRequestUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -34,8 +33,7 @@ public class GenreController {
 
     @GetMapping("create")
     public String create(ModelMap model, HttpServletRequest httpServletRequest) {
-        model.addAttribute("currentPage", "genre");
-        model.addAttribute("httpServletRequest", httpServletRequest);
+        model.addAttribute("currentPage", new Genre());
         return "genre/create";
     }
 
@@ -44,7 +42,7 @@ public class GenreController {
 
         this.genreService.deleteGenre(id);
 
-        if (request.getHeader("HX-Request") != null) {
+        if (HtmxRequestUtil.isHtmxRequest(request)) {
             log.info("HX-Request");
             return "fragments/empty";
         }
@@ -57,7 +55,7 @@ public class GenreController {
             Optional<String> name,
             Optional<String> description,
             ModelMap model,
-            HttpServletRequest httpServletRequest) {
+            HttpServletRequest request) {
 
         var results = this.genreService.getGenres(pageable, name, description);
 
@@ -66,7 +64,7 @@ public class GenreController {
         name.ifPresent(n -> model.addAttribute("searchName", n));
         description.ifPresent(d -> model.addAttribute("searchDescription", d));
 
-        if (httpServletRequest.getHeader("HX-Request") != null) {
+        if (HtmxRequestUtil.isHtmxRequest(request)) {
             return "genre/list :: search-table";
         }
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" data-theme="light">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" data-theme="light" hx-boost="true">
 
 <head th:replace="fragments/layout.html :: headerfiles">
 </head>
@@ -14,13 +14,13 @@
             <label class="input input-bordered flex items-center gap-2">
                 Naziv
                 <input class="grow" type="text" name="name" placeholder="Unesite naziv"
-                    th:value="${genre.name != null? genre.name: null}" />
+                    th:value="${genre != null && genre.name != null? genre.name: null}" />
             </label>
             <small data-error="name" class="hidden"></small>
             <label class="textarea textarea-bordered flex items-start gap-2">
                 Opis
                 <textarea class="grow" type="text" name="description" placeholder="Unesite opis"
-                    th:value="${genre.name != null? genre.name: null}"></textarea>
+                    th:value="${genre != null && genre.description != null? genre.description: null}"></textarea>
             </label>
             <small data-error="description" class="hidden"></small>
 
