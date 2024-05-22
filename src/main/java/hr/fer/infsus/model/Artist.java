@@ -1,19 +1,27 @@
 package hr.fer.infsus.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
+@EqualsAndHashCode(callSuper = true)
 @Entity
-public class Artist {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @OneToOne(optional = false)
-    private User user;
+@Data
+@NoArgsConstructor
+public class Artist extends User{
+//    @Id
+////    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id;
+//    @OneToOne(optional = false)
+//    private User user;
     @Column(nullable = false)
     private String type;
+
+    public Artist(String name, String lastname, String username, String type) {
+        super(name, lastname, username);
+        this.type = type;
+    }
 }
