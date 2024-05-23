@@ -6,10 +6,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
 @Entity
+@Data
+@NoArgsConstructor
 public class Artwork {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,16 +24,20 @@ public class Artwork {
     @Column(nullable = false)
     private String description;
 
-    @ManyToOne
+    @Column(nullable = false, unique = true)
+    private String url;
+
+    @ManyToOne(optional = false)
     private Artist artist;
     @ManyToOne
     private Collection collection;
 
-    public Artwork(String name, String description, Artist artist, Collection collection) {
+    public Artwork(String name, String description, Artist artist, Collection collection, String url) {
         this.name = name;
         this.description = description;
         this.artist = artist;
         this.collection = collection;
+        this.url = url;
     }
 
     public Long getId() {

@@ -1,4 +1,8 @@
 spring:
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
   application:
       name: infsus
   docker:
@@ -10,6 +14,8 @@ spring:
     password: postgres
     driver-class-name: org.postgresql.Driver
   jpa:
+    show-sql: true
     hibernate:
       ddl-auto: update
-      show-sql: true
+      format_sql: true
+

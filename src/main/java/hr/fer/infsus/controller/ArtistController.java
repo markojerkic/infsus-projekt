@@ -1,16 +1,13 @@
 package hr.fer.infsus.controller;
 
 import hr.fer.infsus.dto.ArtistDto;
-import hr.fer.infsus.model.Artist;
-import hr.fer.infsus.service.sif.ArtistService;
+import hr.fer.infsus.service.ArtistService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,7 +34,34 @@ public class ArtistController {
 
     @PostMapping("/new")
     public String createArtist(@ModelAttribute("artist") ArtistDto artist){
-        Long id = artistService.saveArtist(artist);
+        Long id = artistService.createArtist(artist);
+
         return "redirect:/artist";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String getEditArtist(Model model, @PathVariable Long id){
+        ArtistDto artist = artistService.findById(id);
+        model.addAttribute("artist", artist);
+        return "artist/edit";
+    }
+
+    @PostMapping("/edit")
+    public String editArtist(@ModelAttribute("artist") ArtistDto artist, @RequestParam("returnUrl") String returnUrl){
+        artistService.saveArtist(artist);
+        return "redirect:" + returnUrl;
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteArtist(@PathVariable Long id){
+        artistService.deleteArtist(id);
+        return "redirect:/artist";
+    }
+
+    @GetMapping("/{id}")
+    public String getArtistDetail(Model model, @PathVariable Long id){
+        ArtistDto artist = artistService.findArtistById(id);
+        model.addAttribute("artist", artist);
+        return "artist/detail";
     }
 }

@@ -23,9 +23,9 @@ public class User {
     @Column(unique = true, nullable = false)
     private String username;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<Artist> savedArtists;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<Artwork> savedArtworks;
 
     public User(String name, String lastname, String username) {
