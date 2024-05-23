@@ -18,6 +18,18 @@ import lombok.RequiredArgsConstructor;
 public class GenreService {
     private final GenreRepository genreRepository;
 
+    public Genre updateGenre(Long id, Genre genreModel) {
+        this.genreRepository.findById(id).orElseThrow();
+
+        var genre = Genre.builder()
+                .id(id)
+                .name(genreModel.getName())
+                .description(genreModel.getDescription())
+                .build();
+
+        return this.genreRepository.save(genre);
+    }
+
     public Genre createGenre(Genre genreModel) {
         var genre = Genre.builder()
                 .name(genreModel.getName())

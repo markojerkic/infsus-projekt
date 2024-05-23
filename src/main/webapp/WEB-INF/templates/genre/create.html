@@ -10,7 +10,7 @@
 
     <main class="mx-auto w-full">
 
-        <form hx-post="/genre" class="max-w-[50rem] mx-auto flex flex-col gap-2">
+        <form th:hx-post="${isEdit? '/genre/' + genre.id : '/genre'}" class="max-w-[50rem] mx-auto flex flex-col gap-2">
             <label class="input input-bordered flex items-center gap-2">
                 Naziv
                 <input class="grow" type="text" name="name" placeholder="Unesite naziv"

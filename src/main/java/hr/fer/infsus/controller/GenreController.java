@@ -31,27 +31,8 @@ public class GenreController {
 
     private final GenreService genreService;
 
-    @GetMapping("create")
-    public String create(ModelMap model, HttpServletRequest httpServletRequest) {
-        model.addAttribute("currentPage", new Genre());
-        return "genre/create";
-    }
-
-    @DeleteMapping("/{id}")
-    public String delete(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
-
-        this.genreService.deleteGenre(id);
-
-        if (HtmxRequestUtil.isHtmxRequest(request)) {
-            log.info("HX-Request");
-            return "fragments/empty";
-        }
-
-        return "redirect:/genre";
-    }
-
     @GetMapping
-    public String index(@PageableDefault(size = 5) Pageable pageable,
+    public String index(@PageableDefault Pageable pageable,
             Optional<String> name,
             Optional<String> description,
             ModelMap model,
@@ -71,11 +52,10 @@ public class GenreController {
         return "genre/list";
     }
 
-    @GetMapping("/{id}/edit")
-    public String edit(@PathVariable Long id, ModelMap model, HttpServletRequest httpServletRequest) {
-        var genre = this.genreService.getGenreById(id);
-
-        model.addAttribute("genre", genre);
+    @GetMapping("create")
+    public String create(ModelMap model, HttpServletRequest httpServletRequest) {
+        model.addAttribute("currentPage", new Genre());
+        model.addAttribute("isEdit", false);
         return "genre/create";
     }
 
@@ -86,6 +66,15 @@ public class GenreController {
 
         model.addAttribute("genre", genre);
         return "genre/genre";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String edit(@PathVariable Long id, ModelMap model, HttpServletRequest httpServletRequest) {
+        var genre = this.genreService.getGenreById(id);
+
+        model.addAttribute("genre", genre);
+        model.addAttribute("isEdit", true);
+        return "genre/create";
     }
 
     @PostMapping
@@ -119,6 +108,50 @@ public class GenreController {
         model.addAttribute("genre", createdGenre);
 
         return "genre/genre";
+    }
+
+    @PostMapping("/{id}")
+    public String updateGenre(@PathVariable Long id,
+            @Valid @ModelAttribute("employee") Genre genre,
+            BindingResult bindingResult,
+            HttpServletResponse response,
+            ModelMap model) {
+
+        if (bindingResult.hasErrors()) {
+            var error = bindingResult.getFieldError();
+            var target = error.getField();
+            var message = error.getDefaultMessage();
+
+            response.addHeader("HX-Retarget", "small[data-error='" + target + "']");
+            response.addHeader("HX-Reswap", "outerHTML");
+
+            log.error("Validation error: {} - {}", target, message);
+
+            model.addAttribute("message", message);
+            model.addAttribute("target", target);
+            return "errors/validation-error";
+        }
+
+        var createdGenre = this.genreService.createGenre(genre);
+
+        response.addHeader("HX-Redirect", "/genre/" + createdGenre.getId());
+
+        model.addAttribute("genre", createdGenre);
+
+        return "genre/genre";
+    }
+
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
+
+        this.genreService.deleteGenre(id);
+
+        if (HtmxRequestUtil.isHtmxRequest(request)) {
+            log.info("HX-Request");
+            return "fragments/empty";
+        }
+
+        return "redirect:/genre";
     }
 
 }
