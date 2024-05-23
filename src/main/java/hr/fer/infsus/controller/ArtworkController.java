@@ -2,6 +2,7 @@ package hr.fer.infsus.controller;
 
 import hr.fer.infsus.dto.ArtworkDto;
 import hr.fer.infsus.forms.ArtworkForm;
+import hr.fer.infsus.forms.SearchQuery;
 import hr.fer.infsus.forms.partial.ArtistPartial;
 import hr.fer.infsus.forms.partial.CollectionPartial;
 import hr.fer.infsus.service.ArtistService;
@@ -14,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/artwork")
@@ -26,11 +28,23 @@ public class ArtworkController {
     private final CollectionService collectionService;
 
     @GetMapping
-    public String allArtwork(Model model){
-        List<ArtworkDto> artworks = artworkService.findAllArtworks();
+    public String allArtwork(Model model, @RequestParam(name = "query", required = false)String query){
+
+        List<ArtworkDto> artworks;
+        if(query == null){
+              artworks  = artworkService.findAllArtworks();
+              query = "";
+
+        } else {
+            artworks = artworkService.findByName(query);
+        }
+
         model.addAttribute("artworks", artworks);
+        model.addAttribute("search", new SearchQuery(query));
         return "artwork/artworks";
     }
+
+
 
     @GetMapping("/new")
     public String getNewArtwork(Model model, @RequestParam String returnUrl){

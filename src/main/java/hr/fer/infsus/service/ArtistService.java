@@ -2,7 +2,6 @@ package hr.fer.infsus.service;
 
 import hr.fer.infsus.dto.ArtistDto;
 import hr.fer.infsus.forms.partial.ArtistPartial;
-import hr.fer.infsus.model.Artist;
 
 import java.util.List;
 
@@ -19,5 +18,7 @@ public interface ArtistService {
 
     List<ArtistPartial> allArtistPartials();
 
-    ArtistDto findArtistById(Long id);
+    ArtistDto findArtistById(Long id, String query);
+
+    List<ArtistDto> findByUsername(String query);
 }

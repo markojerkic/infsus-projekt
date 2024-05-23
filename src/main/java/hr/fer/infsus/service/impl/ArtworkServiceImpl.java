@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -94,6 +95,11 @@ public class ArtworkServiceImpl implements ArtworkService {
     public void deleteArtwork(Long id) {
         Artwork artwork = repository.findById(id).orElseThrow(() -> new IllegalStateException("No artwork with id " + id));
         repository.delete(artwork);
+    }
+
+    @Override
+    public List<ArtworkDto> findByName(String s) {
+        return repository.findByUsername(s.toLowerCase(Locale.ROOT)).stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
     public ArtworkDto mapToDto(Artwork artwork) {

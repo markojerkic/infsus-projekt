@@ -14,4 +14,6 @@ public interface ArtworkService {
     ArtworkDto findById(Long id);
 
     void deleteArtwork(Long id);
+
+    List<ArtworkDto> findByName(String s);
 }

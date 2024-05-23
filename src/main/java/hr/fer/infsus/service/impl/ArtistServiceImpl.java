@@ -6,7 +6,6 @@ import hr.fer.infsus.forms.partial.ArtistPartial;
 import hr.fer.infsus.model.Artist;
 import hr.fer.infsus.repository.ArtisRepository;
 import hr.fer.infsus.service.ArtistService;
-import hr.fer.infsus.service.ArtworkService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -76,9 +75,14 @@ public class ArtistServiceImpl implements ArtistService {
     }
 
     @Override
-    public ArtistDto findArtistById(Long id) {
+    public ArtistDto findArtistById(Long id, String query) {
         Artist artist = artisRepository.findById(id).orElseThrow(() -> new IllegalStateException("No artist with id " + id));
-        return mapToArtistDto(artist);
+        return mapToArtistDto(artist, query);
+    }
+
+    @Override
+    public List<ArtistDto> findByUsername(String query) {
+        return artisRepository.findByUsername(query.toLowerCase()).stream().map(this::mapToArtistDto).collect(Collectors.toList());
     }
 
     private ArtistPartial mapToArtistPartial(ArtistDto artistDto) {
@@ -87,6 +91,27 @@ public class ArtistServiceImpl implements ArtistService {
 
     private ArtistDto mapToArtistDto(Artist artist) {
         List<ArtworkDto> artworks = artist.getArtworks().stream().map(artworkService::mapToDto).toList();
+        return new ArtistDto(
+                artist.getId(),
+                artist.getName(),
+                artist.getLastname(),
+                artist.getUsername(),
+                artist.getType(),
+                artworks
+        );
+    }
+
+    private ArtistDto mapToArtistDto(Artist artist, String query) {
+        List<ArtworkDto> artworks;
+        if(query == null){
+            artworks = artist.getArtworks().stream().map(artworkService::mapToDto).toList();
+
+        } else {
+            artworks = artist.getArtworks().stream()
+                    .filter(artwork -> artwork.getName().toLowerCase().contains(query.toLowerCase()))
+                    .map(artworkService::mapToDto)
+                    .toList();
+        }
         return new ArtistDto(
                 artist.getId(),
                 artist.getName(),

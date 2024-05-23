@@ -1,6 +1,7 @@
 package hr.fer.infsus.controller;
 
 import hr.fer.infsus.dto.ArtistDto;
+import hr.fer.infsus.forms.SearchQuery;
 import hr.fer.infsus.service.ArtistService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.naming.directory.SearchControls;
 import java.util.List;
 
 @Controller
@@ -20,9 +22,21 @@ public class ArtistController {
     private final ArtistService artistService;
 
     @GetMapping
-    public String allArtists(Model model){
-        List<ArtistDto> artists = artistService.findAllArtists();
+    public String allArtists(Model model, @RequestParam(name = "query", required = false)String query){
+
+
+        List<ArtistDto> artists;
+
+
+        if(query == null){
+            artists  = artistService.findAllArtists();
+            query = "";
+
+        } else {
+            artists = artistService.findByUsername(query);
+        }
         model.addAttribute("artists", artists);
+        model.addAttribute("search", new SearchQuery(query));
         return "artist/artists";
     }
 
@@ -59,9 +73,15 @@ public class ArtistController {
     }
 
     @GetMapping("/{id}")
-    public String getArtistDetail(Model model, @PathVariable Long id){
-        ArtistDto artist = artistService.findArtistById(id);
+    public String getArtistDetail(Model model, @PathVariable Long id, @RequestParam(name = "query", required = false)String query){
+        ArtistDto artist = artistService.findArtistById(id, query);
+
+        if(query == null){
+            query = "";
+
+        }
         model.addAttribute("artist", artist);
+        model.addAttribute("search", new SearchQuery(query));
         return "artist/detail";
     }
 }
