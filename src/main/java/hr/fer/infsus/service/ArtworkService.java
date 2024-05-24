@@ -1,15 +1,16 @@
 package hr.fer.infsus.service;
 
 import hr.fer.infsus.dto.ArtworkDto;
+import hr.fer.infsus.forms.ArtworkForm;
 
 import java.util.List;
 
 public interface ArtworkService {
     List<ArtworkDto> findAllArtworks();
 
-    Long saveArtwork(ArtworkDto artworkDto);
+    Long saveArtwork(ArtworkForm artworkForm);
 
-    Long createArtwork(ArtworkDto artworkDto);
+    Long createArtwork(ArtworkForm artworkForm);
 
     ArtworkDto findById(Long id);
 

@@ -7,7 +7,7 @@
 <form role="form" method="post" th:action="@{/artist/new}" th:object="${artist}" class="w-full max-w-sm">
   <div class="md:flex md:items-center mb-6">
     <div class="md:w-1/3">
-      <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="name">
+      <label class="block text-white-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="name">
         Ime
       </label>
     </div>
@@ -17,12 +17,14 @@
              type="text"
              th:field="*{name}"
       >
+      <p th:if="${#fields.hasErrors('name')}" class="text-red-900" th:errors="*{name}"></p>
+
     </div>
   </div>
 
   <div class="md:flex md:items-center mb-6">
     <div class="md:w-1/3">
-      <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="lastname">
+      <label class="block text-white-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="lastname">
         Prezime
       </label>
     </div>
@@ -32,12 +34,14 @@
              type="text"
              th:field="*{lastname}"
       >
+      <p th:if="${#fields.hasErrors('lastname')}" class="text-red-900" th:errors="*{lastname}"></p>
+
     </div>
   </div>
 
   <div class="md:flex md:items-center mb-6">
     <div class="md:w-1/3">
-      <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="username">
+      <label class="block text-white-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="username">
         Korisnicko ime
       </label>
     </div>
@@ -47,12 +51,14 @@
              type="text"
              th:field="*{username}"
       >
+      <p th:if="${#fields.hasErrors('username')}" class="text-red-900" th:errors="*{username}"></p>
+
     </div>
   </div>
 
   <div class="md:flex md:items-center mb-6">
     <div class="md:w-1/3">
-      <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="type">
+      <label class="block text-white-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="type">
         Vrsta
       </label>
     </div>
@@ -62,6 +68,8 @@
              type="text"
              th:field="*{type}"
       >
+      <p th:if="${#fields.hasErrors('type')}" class="text-red-900" th:errors="*{type}"></p>
+
     </div>
   </div>
 

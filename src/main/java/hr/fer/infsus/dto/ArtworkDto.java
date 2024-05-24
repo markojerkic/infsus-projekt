@@ -5,6 +5,8 @@ import hr.fer.infsus.model.Artist;
 import hr.fer.infsus.model.Collection;
 import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +16,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class ArtworkDto {
     private Long id;
+
 
     private String name;
 

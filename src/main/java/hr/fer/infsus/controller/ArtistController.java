@@ -4,10 +4,12 @@ import hr.fer.infsus.dto.ArtistDto;
 import hr.fer.infsus.forms.SearchQuery;
 import hr.fer.infsus.service.ArtistService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.directory.SearchControls;
@@ -47,7 +49,8 @@ public class ArtistController {
     }
 
     @PostMapping("/new")
-    public String createArtist(@ModelAttribute("artist") ArtistDto artist){
+    public String createArtist(@Valid  @ModelAttribute("artist") ArtistDto artist, BindingResult bindingResult){
+        if(bindingResult.hasErrors()) return "artist/new";
         Long id = artistService.createArtist(artist);
 
         return "redirect:/artist";
@@ -61,7 +64,8 @@ public class ArtistController {
     }
 
     @PostMapping("/edit")
-    public String editArtist(@ModelAttribute("artist") ArtistDto artist, @RequestParam("returnUrl") String returnUrl){
+    public String editArtist(@Valid @ModelAttribute("artist") ArtistDto artist, BindingResult bindingResult, @RequestParam(value = "returnUrl", defaultValue = "/artist") String returnUrl){
+        if(bindingResult.hasErrors()) return "artist/edit";
         artistService.saveArtist(artist);
         return "redirect:" + returnUrl;
     }

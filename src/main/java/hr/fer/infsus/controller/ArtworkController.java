@@ -8,10 +8,12 @@ import hr.fer.infsus.forms.partial.CollectionPartial;
 import hr.fer.infsus.service.ArtistService;
 import hr.fer.infsus.service.ArtworkService;
 import hr.fer.infsus.service.CollectionService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,11 +49,14 @@ public class ArtworkController {
 
 
     @GetMapping("/new")
-    public String getNewArtwork(Model model, @RequestParam String returnUrl){
+    public String getNewArtwork(Model model, @RequestParam(defaultValue = "/artwork") String returnUrl){
 
         List<ArtistPartial> artistPartials = artistService.allArtistPartials();
         List<CollectionPartial> collectionPartials = collectionService.allCollectionsPartial();
-        ArtworkForm artworkForm = new ArtworkForm(artistPartials, collectionPartials);
+        ArtworkForm artworkForm = new ArtworkForm();
+
+        artworkForm.setArtists(artistPartials);
+        artworkForm.setCollections(collectionPartials);
 
         artworkForm.setReturnUrl(returnUrl);
 
@@ -73,15 +78,23 @@ public class ArtworkController {
     }
 
     @PostMapping("/new")
-    public String createArtwork(@ModelAttribute("artwork") ArtworkDto artworkDto, @RequestParam("returnUrl") String returnUrl){
-        Long id = artworkService.createArtwork(artworkDto);
+    public String createArtwork(@Valid @ModelAttribute("artwork") ArtworkForm artworkForm, BindingResult bindingResult, @RequestParam(value = "returnUrl", defaultValue = "/artwork") String returnUrl){
+
+        if(bindingResult.hasErrors()) {
+            artworkForm.setArtists(artistService.allArtistPartials());
+            artworkForm.setCollections(collectionService.allCollectionsPartial());
+            artworkForm.setReturnUrl(returnUrl);
+            return "artwork/new";
+        }
+
+        Long id = artworkService.createArtwork(artworkForm);
 
 
         return "redirect:" + returnUrl;
     }
 
     @GetMapping("/edit/{id}")
-    public String getEditArtwork(Model model, @PathVariable Long id, @RequestParam String returnUrl){
+    public String getEditArtwork(Model model, @PathVariable Long id, @RequestParam(defaultValue = "/artwork") String returnUrl){
         ArtworkDto artwork = artworkService.findById(id);
         List<ArtistPartial> artistPartials = artistService.allArtistPartials();
         List<CollectionPartial> collectionPartials = collectionService.allCollectionsPartial();
@@ -113,13 +126,19 @@ public class ArtworkController {
     }
 
     @PostMapping("/edit")
-    public String editArtwork(@ModelAttribute("artwork") ArtworkDto artworkDto, @RequestParam("returnUrl") String returnUrl){
-        Long id = artworkService.saveArtwork(artworkDto);
+    public String editArtwork(@Valid @ModelAttribute("artwork") ArtworkForm artworkForm, BindingResult bindingResult, @RequestParam(defaultValue = "/artwork") String returnUrl){
+        if(bindingResult.hasErrors()) {
+            artworkForm.setArtists(artistService.allArtistPartials());
+            artworkForm.setCollections(collectionService.allCollectionsPartial());
+            artworkForm.setReturnUrl(returnUrl);
+            return "artwork/new";
+        }
+        Long id = artworkService.saveArtwork(artworkForm);
         return "redirect:" + returnUrl;
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteArtist(@PathVariable Long id, @RequestParam String returnUrl){
+    public String deleteArtist(@PathVariable Long id, @RequestParam(defaultValue = "/artwork") String returnUrl){
         artworkService.deleteArtwork(id);
         return "redirect:" + returnUrl;
     }

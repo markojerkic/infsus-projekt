@@ -1,6 +1,7 @@
 package hr.fer.infsus.service.impl;
 
 import hr.fer.infsus.dto.ArtworkDto;
+import hr.fer.infsus.forms.ArtworkForm;
 import hr.fer.infsus.model.Artist;
 import hr.fer.infsus.model.Artwork;
 import hr.fer.infsus.model.Collection;
@@ -30,21 +31,21 @@ public class ArtworkServiceImpl implements ArtworkService {
     }
 
     @Override
-    public Long createArtwork(ArtworkDto artworkDto) {
-        Artist artist = artisRepository.findById(artworkDto.getArtistId()).orElseThrow(()-> new IllegalStateException("No artist with id " + artworkDto.getArtistId()));
+    public Long createArtwork(ArtworkForm artworkForm) {
+        Artist artist = artisRepository.findById(artworkForm.getArtistId()).orElseThrow(()-> new IllegalStateException("No artist with id " + artworkForm.getArtistId()));
         Collection collection = null;
 
-        if(artworkDto.getCollectionId() != null){
-            collection = collectionRepository.findById(artworkDto.getCollectionId()).orElseThrow(()-> new IllegalStateException("No collcetion with id " + artworkDto.getCollectionId()));
+        if(artworkForm.getCollectionId() != null){
+            collection = collectionRepository.findById(artworkForm.getCollectionId()).orElseThrow(()-> new IllegalStateException("No collcetion with id " + artworkForm.getCollectionId()));
         }
 
 
         Artwork artwork = new Artwork(
-                artworkDto.getName(),
-                artworkDto.getDescription(),
+                artworkForm.getName(),
+                artworkForm.getDescription(),
                 artist,
                 collection,
-                artworkDto.getUrl()
+                artworkForm.getUrl()
         );
 
         artist.getArtworks().add(artwork);
@@ -58,13 +59,13 @@ public class ArtworkServiceImpl implements ArtworkService {
     }
 
     @Override
-    public Long saveArtwork(ArtworkDto artworkDto) {
-        Artwork artwork = repository.findById(artworkDto.getId()).orElseThrow(() -> new IllegalStateException("No artwork with id " + artworkDto.getId()));
-        Artist artist = artisRepository.findById(artworkDto.getArtistId()).orElseThrow(() -> new IllegalStateException("No artist with id " + artworkDto.getArtistId()));
+    public Long saveArtwork(ArtworkForm artworkForm) {
+        Artwork artwork = repository.findById(artworkForm.getId()).orElseThrow(() -> new IllegalStateException("No artwork with id " + artworkForm.getId()));
+        Artist artist = artisRepository.findById(artworkForm.getArtistId()).orElseThrow(() -> new IllegalStateException("No artist with id " + artworkForm.getArtistId()));
 
         Collection collection = null;
-        if(artworkDto.getCollectionId() != null){
-            collection = collectionRepository.findById(artworkDto.getCollectionId()).orElseThrow(() -> new IllegalStateException("No collecetion with id " + artworkDto.getCollectionId()));
+        if(artworkForm.getCollectionId() != null){
+            collection = collectionRepository.findById(artworkForm.getCollectionId()).orElseThrow(() -> new IllegalStateException("No collecetion with id " + artworkForm.getCollectionId()));
         }
 
 
@@ -77,13 +78,13 @@ public class ArtworkServiceImpl implements ArtworkService {
         }
 
         artwork.setCollection(collection);
-        artwork.setName(artworkDto.getName());
-        artwork.setUrl(artworkDto.getUrl());
-        artwork.setDescription(artworkDto.getDescription());
+        artwork.setName(artworkForm.getName());
+        artwork.setUrl(artworkForm.getUrl());
+        artwork.setDescription(artworkForm.getDescription());
 
         repository.save(artwork);
 
-        return artworkDto.getId();
+        return artworkForm.getId();
     }
 
     @Override
