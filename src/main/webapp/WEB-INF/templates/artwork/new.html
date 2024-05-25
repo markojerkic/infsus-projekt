@@ -17,7 +17,7 @@
              type="text"
              th:field="*{name}"
       >
-      <p th:if="${#fields.hasErrors('name')}" class="text-red-900" th:errors="*{name}"></p>
+      <p th:if="${#fields.hasErrors('name')}" class="text-error" th:errors="*{name}"></p>
 
     </div>
   </div>
@@ -33,7 +33,7 @@
               name="description"
               th:field="*{description}"
               required="required"></textarea>
-    <p th:if="${#fields.hasErrors('description')}" class="text-red-900" th:errors="*{description}"></p>
+    <p th:if="${#fields.hasErrors('description')}" class="text-error" th:errors="*{description}"></p>
 
   </div>
 
@@ -50,7 +50,7 @@
              type="text"
              th:field="*{url}"
       >
-      <p th:if="${#fields.hasErrors('url')}" class="text-red-900" th:errors="*{url}"></p>
+      <p th:if="${#fields.hasErrors('url')}" class="text-error" th:errors="*{url}"></p>
 
     </div>
   </div>

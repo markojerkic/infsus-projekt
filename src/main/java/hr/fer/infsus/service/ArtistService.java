@@ -1,6 +1,7 @@
 package hr.fer.infsus.service;
 
-import hr.fer.infsus.dto.ArtistDto;
+import hr.fer.infsus.dto.artist.ArtistDto;
+import hr.fer.infsus.dto.artist.NewArtistDto;
 import hr.fer.infsus.forms.partial.ArtistPartial;
 
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.List;
 public interface ArtistService {
     List<ArtistDto> findAllArtists();
 
-    Long createArtist(ArtistDto artist);
+    Long createArtist(NewArtistDto artist);
 
     Long saveArtist(ArtistDto artistDto);
 

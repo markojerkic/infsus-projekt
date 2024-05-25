@@ -5,7 +5,7 @@ import hr.fer.infsus.forms.ArtworkForm;
 import hr.fer.infsus.model.Artist;
 import hr.fer.infsus.model.Artwork;
 import hr.fer.infsus.model.Collection;
-import hr.fer.infsus.repository.ArtisRepository;
+import hr.fer.infsus.repository.ArtistRepository;
 import hr.fer.infsus.repository.ArtworkRepository;
 import hr.fer.infsus.repository.CollectionRepository;
 import hr.fer.infsus.service.ArtworkService;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class ArtworkServiceImpl implements ArtworkService {
 
     private final ArtworkRepository repository;
-    private final ArtisRepository artisRepository;
+    private final ArtistRepository artisRepository;
     private final CollectionRepository collectionRepository;
     @Override
     public List<ArtworkDto> findAllArtworks() {

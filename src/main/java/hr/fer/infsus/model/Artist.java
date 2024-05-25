@@ -1,25 +1,26 @@
 package hr.fer.infsus.model;
 
-import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
-public class Artist extends User{
-//    @Id
-////    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
-//    @OneToOne(optional = false)
-//    private User user;
+@AllArgsConstructor
+public class Artist extends User {
     @Column(nullable = false)
     private String type;
 

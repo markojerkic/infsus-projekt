@@ -81,8 +81,8 @@ public class ArtworkController {
     public String createArtwork(@Valid @ModelAttribute("artwork") ArtworkForm artworkForm, BindingResult bindingResult, @RequestParam(value = "returnUrl", defaultValue = "/artwork") String returnUrl){
 
         if(bindingResult.hasErrors()) {
-            artworkForm.setArtists(artistService.allArtistPartials());
-            artworkForm.setCollections(collectionService.allCollectionsPartial());
+            artworkForm.setArtists(this.artistService.allArtistPartials());
+            artworkForm.setCollections(this.collectionService.allCollectionsPartial());
             artworkForm.setReturnUrl(returnUrl);
             return "artwork/new";
         }

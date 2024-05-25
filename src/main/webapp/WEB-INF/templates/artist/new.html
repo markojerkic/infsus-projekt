@@ -1,86 +1,83 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" data-theme="dark">
+
 <head th:replace="fragments/layout.html :: headerfiles">
+
 <body>
-<header th:replace="fragments/layout.html :: header"></header>
+    <header th:replace="fragments/layout.html :: header"></header>
 
-<form role="form" method="post" th:action="@{/artist/new}" th:object="${artist}" class="w-full max-w-sm">
-  <div class="md:flex md:items-center mb-6">
-    <div class="md:w-1/3">
-      <label class="block text-white-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="name">
-        Ime
-      </label>
-    </div>
-    <div class="md:w-2/3">
-      <input class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-             id="name"
-             type="text"
-             th:field="*{name}"
-      >
-      <p th:if="${#fields.hasErrors('name')}" class="text-red-900" th:errors="*{name}"></p>
+    <form method="post" th:action="@{/artist}" th:object="${artist}" class="w-full max-w-sm">
+        <div class="md:flex md:items-center mb-6">
+            <div class="md:w-1/3">
+                <label class="block text-white-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="name">
+                    Ime
+                </label>
+            </div>
+            <div class="md:w-2/3">
+                <input
+                    class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                    id="name" type="text" th:field="*{name}" placeholder="Unesite ime">
+                <p th:if="${#fields.hasErrors('name')}" class="text-error" th:errors="*{name}"></p>
 
-    </div>
-  </div>
+            </div>
+        </div>
 
-  <div class="md:flex md:items-center mb-6">
-    <div class="md:w-1/3">
-      <label class="block text-white-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="lastname">
-        Prezime
-      </label>
-    </div>
-    <div class="md:w-2/3">
-      <input class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-             id="lastname"
-             type="text"
-             th:field="*{lastname}"
-      >
-      <p th:if="${#fields.hasErrors('lastname')}" class="text-red-900" th:errors="*{lastname}"></p>
+        <div class="md:flex md:items-center mb-6">
+            <div class="md:w-1/3">
+                <label class="block text-white-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="lastname">
+                    Prezime
+                </label>
+            </div>
+            <div class="md:w-2/3">
+                <input
+                    class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                    id="lastname" type="text" th:field="*{lastname}" placeholder="Unesite prezime">
+                <p th:if="${#fields.hasErrors('lastname')}" class="text-error" th:errors="*{lastname}"></p>
 
-    </div>
-  </div>
+            </div>
+        </div>
 
-  <div class="md:flex md:items-center mb-6">
-    <div class="md:w-1/3">
-      <label class="block text-white-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="username">
-        Korisnicko ime
-      </label>
-    </div>
-    <div class="md:w-2/3">
-      <input class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-             id="username"
-             type="text"
-             th:field="*{username}"
-      >
-      <p th:if="${#fields.hasErrors('username')}" class="text-red-900" th:errors="*{username}"></p>
+        <div class="md:flex md:items-center mb-6">
+            <div class="md:w-1/3">
+                <label class="block text-white-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="username">
+                    Korisnicko ime
+                </label>
+            </div>
+            <div class="md:w-2/3">
+                <input
+                    class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                    id="username" type="text" th:field="*{username}" placeholder="Unesite koristničko ime">
+                <p th:if="${#fields.hasErrors('username')}" class="text-error" th:errors="*{username}"></p>
 
-    </div>
-  </div>
+            </div>
+        </div>
 
-  <div class="md:flex md:items-center mb-6">
-    <div class="md:w-1/3">
-      <label class="block text-white-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="type">
-        Vrsta
-      </label>
-    </div>
-    <div class="md:w-2/3">
-      <input class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-             id="type"
-             type="text"
-             th:field="*{type}"
-      >
-      <p th:if="${#fields.hasErrors('type')}" class="text-red-900" th:errors="*{type}"></p>
+        <div class="md:flex md:items-center mb-6">
+            <div class="md:w-1/3">
+                <label class="block text-white-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="type">
+                    Vrsta
+                </label>
+            </div>
+            <div class="md:w-2/3">
+                <input
+                    class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                    id="type" type="text" th:field="*{type}">
+                <p th:if="${#fields.hasErrors('type')}" class="text-error" th:errors="*{type}"></p>
 
-    </div>
-  </div>
+            </div>
+        </div>
 
-  <div class="md:flex md:items-center">
-  <div class="md:w-1/3"></div>
-  <div class="md:w-2/3">
-    <button class="shadow bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" type="submit">
-      Submit
-    </button>
-  </div>
-  </div>
-</form>
+        <div class="md:flex md:items-center">
+            <div class="md:w-1/3"></div>
+            <div class="md:w-2/3">
+                <button
+                    class="shadow bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
+                    type="submit">
+                    Submit
+                </button>
+            </div>
+        </div>
+    </form>
 </body>
+
 </html>
