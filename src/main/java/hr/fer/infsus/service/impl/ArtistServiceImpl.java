@@ -1,22 +1,24 @@
 package hr.fer.infsus.service.impl;
 
-import hr.fer.infsus.dto.ArtworkDto;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+
 import hr.fer.infsus.dto.artist.ArtistDto;
-import hr.fer.infsus.dto.artist.ArtistWithArtwork;
 import hr.fer.infsus.dto.artist.NewArtistDto;
+import hr.fer.infsus.dto.query.ArtistQueryDto;
 import hr.fer.infsus.exception.ValidationException;
-import hr.fer.infsus.forms.partial.ArtistPartial;
 import hr.fer.infsus.model.Artist;
 import hr.fer.infsus.repository.ArtistRepository;
 import hr.fer.infsus.repository.UserRepository;
 import hr.fer.infsus.service.ArtistService;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,15 +26,12 @@ import java.util.stream.Collectors;
 public class ArtistServiceImpl implements ArtistService {
 
     private final ArtistRepository artistRepository;
-    private final ArtworkServiceImpl artworkService;
     private final UserRepository userRepository;
 
     @Override
-    public List<ArtistDto> findAllArtists() {
-        List<Artist> artists = artistRepository.findAll();
-        return artists.stream()
-                .map(this::mapToArtistDto)
-                .collect(Collectors.toList());
+    public Page<Artist> findAllArtists(Pageable pageable, ArtistQueryDto query) {
+        var spec = this.search(query);
+        return this.artistRepository.findAll(spec, pageable);
     }
 
     @Override
@@ -73,58 +72,46 @@ public class ArtistServiceImpl implements ArtistService {
     }
 
     @Override
-    public ArtistDto findById(Long id) {
-        return this.mapToArtistDto(
-                artistRepository.findById(id).orElseThrow(() -> new IllegalStateException("No artist with id " + id)));
+    public Artist getArtistById(Long id) {
+        return artistRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("No artist with id " + id));
     }
 
     @Override
     public void deleteArtist(Long id) {
-        artistRepository.deleteById(id);
+        this.artistRepository.deleteById(id);
     }
 
-    @Override
-    public List<ArtistPartial> allArtistPartials() {
-        return this.findAllArtists()
-                .stream()
-                .map(this::mapToArtistPartial)
-                .collect(Collectors.toList());
+    private Specification<Artist> search(ArtistQueryDto query) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            var predicates = new ArrayList<Predicate>();
+
+            if (query == null) {
+                return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+            }
+
+            if (query.getName() != null) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")),
+                        "%" + query.getName().toLowerCase() + "%"));
+            }
+
+            if (query.getLastname() != null) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("lastname")),
+                        "%" + query.getLastname().toLowerCase() + "%"));
+            }
+
+            if (query.getUsername() != null) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("username")),
+                        "%" + query.getUsername().toLowerCase() + "%"));
+            }
+
+            if (query.getType() != null) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("type")),
+                        "%" + query.getType().toLowerCase() + "%"));
+            }
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
     }
 
-    @Override
-    public ArtistDto findArtistById(Long id, String query) {
-        Artist artist = artistRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("No artist with id " + id));
-        return mapToArtistDto(artist, query);
-    }
-
-    @Override
-    public List<ArtistDto> findByUsername(String query) {
-        return this.artistRepository.findByUsername(query.toLowerCase()).stream().map(this::mapToArtistDto)
-                .collect(Collectors.toList());
-    }
-
-    private ArtistPartial mapToArtistPartial(NewArtistDto artistDto) {
-        return new ArtistPartial(artistDto.getId(), artistDto.etUsername());
-    }
-
-    private ArtistWithArtwork mapToArtistDto(Artist artist, String query) {
-        List<ArtworkDto> artworks;
-        if (query == null) {
-            artworks = artist.getArtworks().stream().map(artworkService::mapToDto).toList();
-        } else {
-            artworks = artist.getArtworks().stream()
-                    .filter(artwork -> artwork.getName().toLowerCase().contains(query.toLowerCase()))
-                    .map(artworkService::mapToDto)
-                    .toList();
-        }
-
-        var artistWithArtwork = new ArtistWithArtwork(artworks);
-        artistWithArtwork.setId(artist.getId());
-        artistWithArtwork.setName(artist.getName());
-        artistWithArtwork.setLastname(artist.getLastname());
-        artistWithArtwork.setUsername(artist.getUsername());
-
-        return artistWithArtwork;
-    }
 }

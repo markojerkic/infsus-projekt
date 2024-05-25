@@ -1,25 +1,24 @@
 package hr.fer.infsus.service;
 
-import hr.fer.infsus.dto.artist.ArtistDto;
-import hr.fer.infsus.dto.artist.NewArtistDto;
-import hr.fer.infsus.forms.partial.ArtistPartial;
-
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import hr.fer.infsus.dto.artist.ArtistDto;
+import hr.fer.infsus.dto.artist.NewArtistDto;
+import hr.fer.infsus.dto.query.ArtistQueryDto;
+import hr.fer.infsus.model.Artist;
+
 public interface ArtistService {
-    List<ArtistDto> findAllArtists();
+    Page<Artist> findAllArtists(Pageable pageable, ArtistQueryDto query);
+
+    Artist getArtistById(Long id);
 
     Long createArtist(NewArtistDto artist);
 
     Long saveArtist(ArtistDto artistDto);
 
-    ArtistDto findById(Long id);
-
     void deleteArtist(Long id);
 
-    List<ArtistPartial> allArtistPartials();
-
-    ArtistDto findArtistById(Long id, String query);
-
-    List<ArtistDto> findByUsername(String query);
 }
