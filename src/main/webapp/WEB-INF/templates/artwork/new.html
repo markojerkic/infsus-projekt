@@ -1,93 +1,81 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" data-theme="dark">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" data-theme="dark" hx-boost="true">
+
 <head th:replace="fragments/layout.html :: headerfiles">
+
 <body>
-<header th:replace="fragments/layout.html :: header"></header>
+    <header th:replace="fragments/layout.html :: header"></header>
 
-<form role="form" method="post" th:object="${artwork}" th:action="@{'/artwork/new?returnUrl=' + ${returnUrl}}"  class="w-full max-w-sm ">
-  <div class="md:flex md:items-center mb-6">
-    <div class="md:w-1/3">
-      <label class="block text-white-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="name">
-        Naziv
-      </label>
-    </div>
-    <div class="md:w-2/3">
-      <input class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-             id="name"
-             type="text"
-             th:field="*{name}"
-      >
-      <p th:if="${#fields.hasErrors('name')}" class="text-error" th:errors="*{name}"></p>
+    <form role="form" method="post" th:object="${artwork}" th:action="@{/artwork/{artistId}/new(artistId=${artistId})}"
+        class="w-full max-w-sm ">
 
-    </div>
-  </div>
+        <input type="hidden" name="artistId" th:field="*{artistId}">
 
-  <div class="md:flex md:items-center mb-6">
-    <div class="md:w-1/3">
-      <label class="block text-white-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="name">
-        Opis
-      </label>
-    </div>
-    <textarea class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-              id="description" rows="5"
-              name="description"
-              th:field="*{description}"
-              required="required"></textarea>
-    <p th:if="${#fields.hasErrors('description')}" class="text-error" th:errors="*{description}"></p>
+        <div class="md:flex md:items-center mb-6">
+            <div class="md:w-1/3">
+                <label class="block text-white-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="name">
+                    Naziv
+                </label>
+            </div>
+            <div class="md:w-2/3">
+                <input
+                    class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                    id="name" type="text" th:field="*{name}">
+                <p th:if="${#fields.hasErrors('name')}" class="text-error" th:errors="*{name}"></p>
 
-  </div>
+            </div>
+        </div>
 
+        <div class="md:flex md:items-center mb-6">
+            <div class="md:w-1/3">
+                <label class="block text-white-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="name">
+                    Opis
+                </label>
+            </div>
+            <textarea
+                class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                id="description" rows="5" name="description" th:field="*{description}" required="required"></textarea>
+            <p th:if="${#fields.hasErrors('description')}" class="text-error" th:errors="*{description}"></p>
 
-  <div class="md:flex md:items-center mb-6">
-    <div class="md:w-1/3">
-      <label class="block text-white-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="url">
-        URL
-      </label>
-    </div>
-    <div class="md:w-2/3">
-      <input class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-             id="url"
-             type="text"
-             th:field="*{url}"
-      >
-      <p th:if="${#fields.hasErrors('url')}" class="text-error" th:errors="*{url}"></p>
-
-    </div>
-  </div>
-
-  <div class="md:flex md:items-center mb-6">
-    <label for="artistId" class="block mb-2 text-sm font-medium text-white-500 ">Odaberite autora</label>
-    <input th:if="${disableSelect} == true" hidden="hidden" th:value="${artistId}" th:field="*{artistId}" id="artistId" type="number">
-    <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
-    dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            th:field="*{artistId}"
-            th:attr="disabled=${disableSelect} ? 'disabled' : null">
-
-      <option  th:each="artist : ${artwork.artists}"  th:value="${artist.id}" th:text="${artist.username}" th:selected="${artist.id == artistId}">
-      </option>
-    </select>
-
-  </div>
-
-  <div class="md:flex md:items-center mb-6">
-
-    <label class="block mb-2 text-sm font-medium text-white-500">Odaberite kolekciju</label>
-    <select th:field="*{collectionId}">
-      <option  th:each="collection : ${artwork.collections}" th:value="${collection.id}" th:text="${collection.name}" th:selected="${collection.id == collectionId}">
-      </option>
-    </select>
+        </div>
 
 
-  </div>
+        <div class="md:flex md:items-center mb-6">
+            <div class="md:w-1/3">
+                <label class="block text-white-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="url">
+                    URL
+                </label>
+            </div>
+            <div class="md:w-2/3">
+                <input
+                    class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                    id="url" type="text" th:field="*{url}">
+                <p th:if="${#fields.hasErrors('url')}" class="text-error" th:errors="*{url}"></p>
 
-  <div class="md:flex md:items-center">
-    <div class="md:w-1/3"></div>
-    <div class="md:w-2/3">
-      <button class="shadow bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" type="submit">
-        Submit
-      </button>
-    </div>
-  </div>
-</form>
+            </div>
+        </div>
+
+        <div class="md:flex md:items-center mb-6">
+
+            <label class="block mb-2 text-sm font-medium text-white-500">Odaberite kolekciju</label>
+            <sl-select th:field="*{collectionId}">
+                <sl-option th:each="collection : ${collections}" th:value="${collection.id}"
+                    th:text="${collection.name}"></sl-option>
+            </sl-select>
+
+        </div>
+
+        <div class="md:flex md:items-center">
+            <div class="md:w-1/3"></div>
+            <div class="md:w-2/3">
+                <button
+                    class="shadow bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
+                    type="submit">
+                    Spremite
+                </button>
+            </div>
+        </div>
+    </form>
 </body>
+
 </html>

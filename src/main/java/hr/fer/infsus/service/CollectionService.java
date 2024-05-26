@@ -1,9 +1,14 @@
 package hr.fer.infsus.service;
 
-import hr.fer.infsus.forms.partial.CollectionPartial;
+import hr.fer.infsus.model.Collection;
 
-import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface CollectionService {
-    List<CollectionPartial> allCollectionsPartial();
+    Page<Collection> getAllCollections(Optional<String> name, Pageable pageable);
+
+    Collection getCollectionById(Long id);
 }

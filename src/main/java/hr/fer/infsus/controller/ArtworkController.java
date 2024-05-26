@@ -5,12 +5,15 @@ import hr.fer.infsus.forms.ArtworkForm;
 import hr.fer.infsus.forms.SearchQuery;
 import hr.fer.infsus.forms.partial.ArtistPartial;
 import hr.fer.infsus.forms.partial.CollectionPartial;
+import hr.fer.infsus.model.Artwork;
 import hr.fer.infsus.service.ArtistService;
 import hr.fer.infsus.service.ArtworkService;
 import hr.fer.infsus.service.CollectionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,9 +28,9 @@ import java.util.Optional;
 @Slf4j
 public class ArtworkController {
     //
-    // private final ArtworkService artworkService;
+    private final ArtworkService artworkService;
     // private final ArtistService artistService;
-    // private final CollectionService collectionService;
+    private final CollectionService collectionService;
     //
     // @GetMapping
     // public String allArtwork(Model model, @RequestParam(name = "query", required
@@ -48,56 +51,53 @@ public class ArtworkController {
     // }
     //
     //
-    //
-    // @GetMapping("/new")
-    // public String getNewArtwork(Model model, @RequestParam(defaultValue =
-    // "/artwork") String returnUrl){
-    //
-    // List<ArtistPartial> artistPartials = artistService.allArtistPartials();
-    // List<CollectionPartial> collectionPartials =
-    // collectionService.allCollectionsPartial();
-    // ArtworkForm artworkForm = new ArtworkForm();
-    //
-    // artworkForm.setArtists(artistPartials);
-    // artworkForm.setCollections(collectionPartials);
-    //
-    // artworkForm.setReturnUrl(returnUrl);
-    //
-    // boolean disableSelect = false;
-    // Long id = null;
-    // if(returnUrl.matches("/artist/[0-9]+")){
-    // disableSelect = true;
-    // String comp[] = returnUrl.split("/");
-    // id = Long.valueOf(comp[2]);
-    // artworkForm.setArtistId(id);
-    // }
-    //
-    //
-    // model.addAttribute("artwork", artworkForm);
-    // model.addAttribute("returnUrl", returnUrl);
-    // model.addAttribute("disableSelect", disableSelect);
-    //
-    // return "artwork/new";
-    // }
-    //
-    // @PostMapping("/new")
-    // public String createArtwork(@Valid @ModelAttribute("artwork") ArtworkForm
-    // artworkForm, BindingResult bindingResult, @RequestParam(value = "returnUrl",
-    // defaultValue = "/artwork") String returnUrl){
-    //
-    // if(bindingResult.hasErrors()) {
-    // artworkForm.setArtists(this.artistService.allArtistPartials());
-    // artworkForm.setCollections(this.collectionService.allCollectionsPartial());
-    // artworkForm.setReturnUrl(returnUrl);
-    // return "artwork/new";
-    // }
-    //
-    // Long id = artworkService.createArtwork(artworkForm);
-    //
-    //
-    // return "redirect:" + returnUrl;
-    // }
-    //
+
+    @GetMapping("/{artistId}/new")
+    public String getNewArtwork(Model model, @PathVariable Long artistId) {
+
+        var collections = this.collectionService.getAllCollections(Optional.empty(), PageRequest.of(0, 25));
+        var artworkForm = new ArtworkForm();
+
+        // boolean disableSelect = false;
+        // Long id = null;
+        // if (returnUrl.matches("/artist/[0-9]+")) {
+        // disableSelect = true;
+        // String comp[] = returnUrl.split("/");
+        // id = Long.valueOf(comp[2]);
+        // artworkForm.setArtistId(id);
+        // }
+
+        artworkForm.setArtistId(artistId);
+        model.addAttribute("artwork", artworkForm);
+        model.addAttribute("collections", collections);
+        model.addAttribute("artistId", artistId);
+
+        return "artwork/new";
+    }
+
+    @PostMapping("/{artistId}/new")
+    public String createArtwork(Model model,
+            @PathVariable Long artistId,
+            @Valid @ModelAttribute("artwork") ArtworkForm artworkForm,
+            BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            var collections = this.collectionService.getAllCollections(Optional.empty(), PageRequest.of(0, 25));
+
+            artworkForm.setArtistId(artistId);
+
+            model.addAttribute("artwork", artworkForm);
+            model.addAttribute("collections", collections);
+            model.addAttribute("artistId", artistId);
+
+            return "artwork/new";
+        }
+
+        Artwork artwork = this.artworkService.createArtwork(artworkForm);
+
+        return String.format("redirect:/artist/%d", artistId);
+    }
+
     // @GetMapping("/edit/{id}")
     // public String getEditArtwork(Model model, @PathVariable Long id,
     // @RequestParam(defaultValue = "/artwork") String returnUrl){

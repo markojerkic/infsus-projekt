@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" hx-boost="true">
 
 <head th:fragment="headerfiles">
     <meta charset="UTF-8">
@@ -18,7 +18,7 @@
 
 <body>
 
-    <header th:fragment="header"  hx-boost="true">
+    <header th:fragment="header" hx-boost="true">
 
         <div class="navbar bg-base-100">
             <div class="navbar-start">
@@ -31,7 +31,7 @@
                         </svg>
                     </div>
                 </div>
-<!--                <a class="btn btn-ghost text-xl">daisyUI</a>-->
+                <!--                <a class="btn btn-ghost text-xl">daisyUI</a>-->
             </div>
             <div class="navbar-center hidden lg:flex">
                 <ul class="menu menu-horizontal px-1">
@@ -42,9 +42,9 @@
                     </li>
                 </ul>
             </div>
-<!--            <div class="navbar-end">-->
-<!--                <a class="btn">Button</a>-->
-<!--            </div>-->
+            <!--            <div class="navbar-end">-->
+            <!--                <a class="btn">Button</a>-->
+            <!--            </div>-->
         </div>
 
     </header>

@@ -9,11 +9,15 @@ import org.springframework.stereotype.Service;
 
 import hr.fer.infsus.dto.query.ArtworkQueryDto;
 import hr.fer.infsus.forms.ArtworkForm;
+import hr.fer.infsus.model.Artist;
 import hr.fer.infsus.model.Artwork;
+import hr.fer.infsus.model.Collection;
 import hr.fer.infsus.repository.ArtistRepository;
 import hr.fer.infsus.repository.ArtworkRepository;
 import hr.fer.infsus.repository.CollectionRepository;
+import hr.fer.infsus.service.ArtistService;
 import hr.fer.infsus.service.ArtworkService;
+import hr.fer.infsus.service.CollectionService;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 
@@ -22,8 +26,8 @@ import lombok.RequiredArgsConstructor;
 public class ArtworkServiceImpl implements ArtworkService {
 
     private final ArtworkRepository artworkRepository;
-    private final ArtistRepository artisRepository;
-    private final CollectionRepository collectionRepository;
+    private final ArtistService artistService;
+    private final CollectionService collectionService;
 
     @Override
     public Page<Artwork> findAllArtworks(Long artistId, Pageable pageable, ArtworkQueryDto query) {
@@ -44,34 +48,19 @@ public class ArtworkServiceImpl implements ArtworkService {
 
     @Override
     public Artwork createArtwork(ArtworkForm artworkForm) {
-        return null;
-        // Artist artist = artisRepository.findById(artworkForm.getArtistId())
-        // .orElseThrow(() -> new IllegalStateException("No artist with id " +
-        // artworkForm.getArtistId()));
-        // Collection collection = null;
-        //
-        // if (artworkForm.getCollectionId() != null) {
-        // collection =
-        // collectionRepository.findById(artworkForm.getCollectionId()).orElseThrow(
-        // () -> new IllegalStateException("No collcetion with id " +
-        // artworkForm.getCollectionId()));
-        // }
-        //
-        // Artwork artwork = new Artwork(
-        // artworkForm.getName(),
-        // artworkForm.getDescription(),
-        // artist,
-        // collection,
-        // artworkForm.getUrl());
-        //
-        // artist.getArtworks().add(artwork);
-        //
-        // if (collection != null) {
-        // collection.getArtworks().add(artwork);
-        // }
-        //
-        // artwork = artworkRepository.save(artwork);
-        // return artwork.getId();
+        var artist = this.artistService.getArtistById(artworkForm.getArtistId());
+        var collection = this.collectionService.getCollectionById(artworkForm.getCollectionId());
+
+        var artwork = new Artwork(
+                artworkForm.getName(),
+                artworkForm.getDescription(),
+                artist,
+                collection,
+                artworkForm.getUrl());
+
+        artist.getArtworks().add(artwork);
+
+        return this.artworkRepository.save(artwork);
     }
 
     @Override
