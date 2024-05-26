@@ -89,7 +89,7 @@ public class ArtworkController {
             BindingResult bindingResult,
             HttpServletResponse response) {
 
-        if ((bindingResult.hasErrors() && cancel) || cancel) {
+        if (cancel) {
             log.info("Canceling creation of artwork with artist id {}", artistId);
             return String.format("redirect:/artist/%d", artistId);
         }

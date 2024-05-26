@@ -45,7 +45,7 @@ public class ArtistControllerTests {
     @Test
     public void testCheckHtmlFormContent() throws Exception {
         var artist = this.createArtist();
-        mockMvc.perform(get("/artist/1"))
+        mockMvc.perform(get("/artist/" + artist.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(
                         org.hamcrest.Matchers.containsString(artist.getName())))
@@ -56,10 +56,9 @@ public class ArtistControllerTests {
     }
 
     @Test
-    public void testEditNonExistentArtist() {
-        Assertions.assertThrows(Exception.class, () -> {
-            mockMvc.perform(get("/artist/edit/2"));
-        });
+    public void testEditNonExistentArtist() throws Exception {
+        mockMvc.perform(get("/artist/edit/2"))
+                .andExpect(status().isNotFound());
     }
 
     private Artist createArtist() {
