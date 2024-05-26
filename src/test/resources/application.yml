@@ -1,0 +1,29 @@
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 128MB
+      max-request-size: 128MB
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  application:
+    name: infsus
+  docker:
+    compose:
+      enabled: true
+      file: ./docker-compose.test.yml
+      skip:
+        in-tests: false
+  datasource:
+    url: jdbc:postgresql://localhost:5434/infsus
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+      format_sql: true
+

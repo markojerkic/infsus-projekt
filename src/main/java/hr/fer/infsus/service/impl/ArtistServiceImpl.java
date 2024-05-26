@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import hr.fer.infsus.dto.artist.NewArtistDto;
 import hr.fer.infsus.dto.query.ArtistQueryDto;
@@ -59,8 +61,7 @@ public class ArtistServiceImpl implements ArtistService {
     @Override
     public Artist saveArtist(Long id, NewArtistDto artistDto) {
 
-        var artist = this.artistRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("No artist with id " + id));
+        var artist = this.getArtistById(id);
 
         artist.setType(artistDto.getType());
         artist.setName(artistDto.getName());
@@ -73,7 +74,7 @@ public class ArtistServiceImpl implements ArtistService {
     @Override
     public Artist getArtistById(Long id) {
         return artistRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("No artist with id " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Artist not found"));
     }
 
     @Override
