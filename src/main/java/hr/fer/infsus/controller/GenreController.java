@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import hr.fer.infsus.model.types.sif.Genre;
-import hr.fer.infsus.service.sif.GenreService;
+import hr.fer.infsus.service.GenreService;
 import hr.fer.infsus.util.HtmxRequestUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import hr.fer.infsus.model.types.sif.Genre;
-import hr.fer.infsus.service.sif.GenreService;
+import hr.fer.infsus.service.GenreService;
 import lombok.RequiredArgsConstructor;
 
 @RestController

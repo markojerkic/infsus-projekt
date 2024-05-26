@@ -14,7 +14,7 @@ import hr.fer.infsus.model.Artwork;
 import hr.fer.infsus.model.types.Video;
 import hr.fer.infsus.repository.VideoRepository;
 import hr.fer.infsus.service.VideoService;
-import hr.fer.infsus.service.sif.GenreService;
+import hr.fer.infsus.service.GenreService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,8 +28,6 @@ public class VideoServiceImpl implements VideoService {
     @Override
     public Video saveVideo(Artwork artwork, VideoForm videoForm) {
         this.checkVideoIsCorrectFormat(videoForm);
-
-
 
         var video = Video.builder()
                 .artwork(artwork)

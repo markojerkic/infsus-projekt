@@ -10,14 +10,16 @@ import org.springframework.stereotype.Service;
 
 import hr.fer.infsus.model.types.sif.Genre;
 import hr.fer.infsus.repository.GenreRepository;
+import hr.fer.infsus.service.GenreService;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class GenreService {
+public class GenreServiceImpl implements GenreService {
     private final GenreRepository genreRepository;
 
+    @Override
     public Genre updateGenre(Long id, Genre genreModel) {
         this.genreRepository.findById(id).orElseThrow();
 
@@ -30,6 +32,7 @@ public class GenreService {
         return this.genreRepository.save(genre);
     }
 
+    @Override
     public Genre createGenre(Genre genreModel) {
         var genre = Genre.builder()
                 .name(genreModel.getName())
@@ -39,14 +42,17 @@ public class GenreService {
         return this.genreRepository.save(genre);
     }
 
+    @Override
     public void deleteGenre(long genreId) {
         this.genreRepository.deleteById(genreId);
     }
 
+    @Override
     public Genre getGenreById(long genreId) {
         return this.genreRepository.findById(genreId).orElseThrow();
     }
 
+    @Override
     public Page<Genre> getGenres(Pageable pageable,
             Optional<String> name,
             Optional<String> description) {

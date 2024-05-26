@@ -23,7 +23,7 @@ import hr.fer.infsus.forms.VideoForm;
 import hr.fer.infsus.service.ArtworkService;
 import hr.fer.infsus.service.CollectionService;
 import hr.fer.infsus.service.VideoService;
-import hr.fer.infsus.service.sif.GenreService;
+import hr.fer.infsus.service.GenreService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
