@@ -53,12 +53,13 @@ public class VideoServiceImpl implements VideoService {
     }
 
     private void checkVideoIsCorrectFormat(VideoForm videoForm) {
-        var videoFileName = videoForm.getFile().getName();
+        var videoFileName = videoForm.getFile().getOriginalFilename();
         var allowedExtensions = List.of("mp4", "webm", "ogg");
 
-        if (!allowedExtensions.contains(videoFileName.substring(videoFileName.lastIndexOf(".") + 1))) {
-            throw new ValidationException("video.file", "Datoteka mora biti u formatu mp4, webm ili ogg.");
-        }
+        allowedExtensions.stream().filter(videoFileName::contains).findAny().orElseThrow(() -> {
+            log.error("Video is in format {}, but only mp4, webm and ogg are allowed.", videoFileName);
+            return new ValidationException("video.file", "Datoteka mora biti u formatu mp4, webm ili ogg.");
+        });
     }
 
     /**

@@ -23,6 +23,7 @@ import hr.fer.infsus.forms.VideoForm;
 import hr.fer.infsus.service.ArtworkService;
 import hr.fer.infsus.service.CollectionService;
 import hr.fer.infsus.service.sif.GenreService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -79,6 +80,7 @@ public class ArtworkController {
             @PathVariable Long artistId,
             @RequestParam(name = "cancel", defaultValue = "false") boolean cancel,
             @Valid @ModelAttribute("artwork") ArtworkForm artworkForm,
+            HttpServletResponse response,
             BindingResult bindingResult) {
 
         if (cancel) {
@@ -87,6 +89,7 @@ public class ArtworkController {
         }
 
         if (bindingResult.hasErrors()) {
+            log.error("Invalid artwork form: {}", bindingResult);
             var collections = this.collectionService.getAllCollections(new CollectionQueryDto(), PageRequest.of(0, 25));
             var genres = this.genreService.getGenres(PageRequest.of(0, 25), Optional.empty(), Optional.empty());
 
@@ -97,12 +100,17 @@ public class ArtworkController {
             model.addAttribute("artistId", artistId);
             model.addAttribute("genres", genres);
 
+            response.addHeader("HX-Reselect", "#artwork-form");
+            response.addHeader("HX-Retarget", "closest div");
+            response.addHeader("HX-Push-Url", "/artist/" + artistId);
+
             return "artwork/new";
         }
 
         try {
             this.artworkService.createArtwork(artworkForm);
         } catch (ValidationException e) {
+            log.error("Validation exception: {}", e);
             var collections = this.collectionService.getAllCollections(new CollectionQueryDto(), PageRequest.of(0, 25));
             var genres = this.genreService.getGenres(PageRequest.of(0, 25), Optional.empty(), Optional.empty());
 
@@ -115,7 +123,11 @@ public class ArtworkController {
 
             bindingResult.addError(new FieldError("artwork", e.getFieldName(), e.getMessage()));
 
-            return "artwork/edit";
+            response.addHeader("HX-Reselect", "#artwork-form");
+            response.addHeader("HX-Retarget", "closest div");
+            response.addHeader("HX-Push-Url", "/artist/" + artistId);
+
+            return "artwork/new";
         }
 
         return String.format("redirect:/artist/%d", artistId);

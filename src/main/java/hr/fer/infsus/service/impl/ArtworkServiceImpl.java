@@ -21,6 +21,7 @@ import hr.fer.infsus.service.CollectionService;
 import hr.fer.infsus.service.VideoService;
 import hr.fer.infsus.service.sif.GenreService;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -50,6 +51,7 @@ public class ArtworkServiceImpl implements ArtworkService {
     }
 
     @Override
+    @Transactional
     public Artwork createArtwork(ArtworkForm artworkForm) {
         var artist = this.artistService.getArtistById(artworkForm.getArtistId());
         var collection = this.collectionService.getCollectionById(artworkForm.getCollectionId());
@@ -70,6 +72,7 @@ public class ArtworkServiceImpl implements ArtworkService {
     }
 
     @Override
+    @Transactional
     public Artwork saveArtwork(Long id, ArtworkForm artworkForm) {
         var artwork = this.artworkRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("No artwork with id " + id));

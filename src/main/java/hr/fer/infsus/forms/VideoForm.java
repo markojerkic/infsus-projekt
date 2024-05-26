@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VideoForm {
-    @NotBlank(message = "Naziv videa ne smije biti prazan")
+    @NotBlank(message = "Trajanje videa ne smije biti prazano")
     @Pattern(regexp = "^\\d+[smhdwmy]$", message = "Trajanje mora biti oblika <broj><mjerna jedinica (npr. s, m, h, d, w, m, y)>")
     private String duration;
 
