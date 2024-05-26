@@ -6,8 +6,8 @@
 <body>
     <header th:replace="fragments/layout.html :: header"></header>
 
-    <form class="w-full max-w-sm" th:insert="artist/new :: artist-edit" th:hx-post="@{/artist/edit/{id}(id=${artist.id})}"
-        th:fragment="artist-form">
+    <form class="w-full max-w-sm" th:insert="artist/new :: artist-edit"
+        th:hx-post="@{/artist/edit/{id}(id=${artist.id})}" th:fragment="artist-form">
         <input type="hidden" th:field="*{id}" id="id" />
     </form>
 
@@ -18,8 +18,8 @@
      dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Novo djelo</a>
     <br><br />
 
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+    <div class="relative overflow-x-auto shadow-md border rounded-md p-2">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400" id="artworks">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <th scope="col" class="px-6 py-3">
@@ -56,10 +56,19 @@
                             th:href="@{'collection/' + ${artwork.collection.id}}"></a>
                     </td>
 
-                    <td><a th:href="@{/artwork/{artistId}/edit/{id}(id=${artwork.id},artistId=${artwork.artist.id})}"
-                            class="text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:ring-yellow-300
+                    <td>
+                        <button type="button" class="text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:ring-yellow-300
      font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-yellow-600
-     dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Uredi djelo</a></td>
+     dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                            th:hx-get="@{/artwork/{artistId}/edit/{id}(id=${artwork.id},artistId=${artwork.artist.id})}"
+                            hx-select="#edit-artwork-form" hx-target="closest div">Uredi djelo</button>
+
+                        <!--                   <a th:href="@{/artwork/{artistId}/edit/{id}(id=${artwork.id},artistId=${artwork.artist.id})}"-->
+                        <!--                       class="text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:ring-yellow-300-->
+                        <!--font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-yellow-600-->
+                        <!--dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Uredi djelo</a>-->
+
+                    </td>
                     <td>
 
                         <a th:href="@{'/artwork/delete/' + ${artwork.id} + '?returnUrl=/artist/' + ${artist.id}}" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300
