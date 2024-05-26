@@ -24,13 +24,13 @@
                 <tr>
                     <form class="max-w-[50rem] mx-auto flex flex-col gap-2" hx-get="/genre" hx-select="#genres"
                         hx-target="#genres" hx-swap="outerHTML" hx-push-url="true"
-                        hx-trigger="input from:input delay:500ms">
+                        hx-trigger="input from:input delay:500ms, search">
                         <th>
-                            <input type="text" name="name" placeholder="Unesite naziv"
+                            <input class="input" type="text" name="name" placeholder="Unesite naziv"
                                 th:value="${searchName != null? searchName: null}" />
                         </th>
                         <th>
-                            <input type="text" name="description" placeholder="Unesite opis"
+                            <input class="input" type="text" name="description" placeholder="Unesite opis"
                                 th:value="${searchDescription != null? searchDescription: null}" />
                         </th>
                         <th />
