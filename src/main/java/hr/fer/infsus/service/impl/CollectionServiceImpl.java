@@ -13,6 +13,7 @@ import hr.fer.infsus.model.Collection;
 import hr.fer.infsus.repository.CollectionRepository;
 import hr.fer.infsus.service.CollectionService;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -53,6 +54,7 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
+    @Transactional
     public void deleteCollection(Long id) {
         this.collectionRepository.deleteById(id);
     }

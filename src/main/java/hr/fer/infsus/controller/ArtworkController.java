@@ -1,8 +1,11 @@
 package hr.fer.infsus.controller;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -210,7 +213,14 @@ public class ArtworkController {
 
     @DeleteMapping("/{id}")
     public String deleteArtwork(@PathVariable Long id, Model model) {
-        this.artworkService.deleteArtwork(id);
+        try {
+            this.artworkService.deleteArtwork(id);
+        } catch (DataIntegrityViolationException e) {
+            model.addAttribute("artworks", new PageImpl<>(List.of(this.artworkService.getById(id))));
+            model.addAttribute("error", "Podatak se još koristi");
+
+            return "artist/detail :: search-items";
+        }
         model.addAttribute("artworks", Page.empty());
 
         return "artist/detail :: search-items";

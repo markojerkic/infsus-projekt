@@ -5,6 +5,7 @@ import java.util.Set;
 import hr.fer.infsus.model.Artwork;
 import hr.fer.infsus.model.types.sif.Genre;
 import hr.fer.infsus.model.types.sif.VideoFormat;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,7 +33,7 @@ public class Video {
     @Column(nullable = false)
     private String path;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Artwork artwork;
     @ManyToMany
     private Set<Genre> genres;

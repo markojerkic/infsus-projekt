@@ -1,6 +1,10 @@
 package hr.fer.infsus.controller;
 
+import java.util.List;
+
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -16,10 +20,12 @@ import hr.fer.infsus.dto.query.CollectionQueryDto;
 import hr.fer.infsus.model.Collection;
 import hr.fer.infsus.service.CollectionService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/collection")
+@Slf4j
 public class CollectionController {
 
     private final CollectionService collectionService;
@@ -64,11 +70,19 @@ public class CollectionController {
 
     @DeleteMapping("/{id}")
     public String deleteCollection(@PathVariable Long id, Model model) {
-        this.collectionService.deleteCollection(id);
+        var collection = this.collectionService.getCollectionById(id);
+        try {
+            this.collectionService.deleteCollection(id);
+        } catch (DataIntegrityViolationException e) {
+            model.addAttribute("error", "Zbirka se još koristi");
+            var triedToDelete = List.of(collection);
+            model.addAttribute("collections", triedToDelete);
+            return "collection/list :: collection-items";
+        }
 
         model.addAttribute("collections", Page.empty());
 
-        return "collection/list :: search-items";
+        return "collection/list :: collection-items";
     }
 
 }

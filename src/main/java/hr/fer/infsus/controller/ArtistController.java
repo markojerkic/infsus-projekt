@@ -1,6 +1,10 @@
 package hr.fer.infsus.controller;
 
+import java.util.List;
+
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -25,10 +29,12 @@ import hr.fer.infsus.util.HtmxRequestUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("/artist")
 @RequiredArgsConstructor
+@Slf4j
 public class ArtistController {
 
     private final ArtistService artistService;
@@ -108,7 +114,15 @@ public class ArtistController {
 
     @DeleteMapping("/{id}")
     public String deleteArtist(@PathVariable Long id, Model model) {
-        artistService.deleteArtist(id);
+        try {
+            this.artistService.deleteArtist(id);
+        } catch (DataIntegrityViolationException e) {
+            model.addAttribute("artists", new PageImpl<>(List.of(this.artistService.getArtistById(id))));
+            model.addAttribute("error", "Podatak se još koristi");
+            log.warn("Artist with id {} is still in use", id);
+
+            return "artist/artists :: search-items";
+        }
         model.addAttribute("artists", Page.empty());
 
         return "artist/artists :: search-items";

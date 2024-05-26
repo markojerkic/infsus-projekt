@@ -70,7 +70,7 @@
             <tbody id="artworks-result">
                 <tr th:each="artwork : ${artworks.content}" th:data-id="${artwork.id}" th:fragment="search-items"
                     class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
                         <a th:text="${artwork.id}" th:href="@{'/artwork/' + ${artwork.id}}"></a>
                     </th>
                     <td th:text="${artwork.name}" class="px-6 py-4">
@@ -89,7 +89,7 @@
                             hx-select="#edit-artwork-form" hx-target="closest div">Uredi djelo</button>
 
                     </td>
-                    <td>
+                    <td class="flex flex-col p-1 justify-center">
 
                         <button type="submit" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300
      font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-600
@@ -97,10 +97,12 @@
                             th:hx-target="@{tr[data-id='{id}'](id=${artwork.id})}" hx-swap="outerHTML"
                             hx-trigger="click" th:hx-delete="@{/artwork/{id}(id=${artwork.id})}">Izbrišite</button>
 
+                        <small th:if="${error}" class="text-error" th:text="${error}"></small>
+
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="5">
+                    <td colspan=" 5">
                         <nav class="flex justify-end gap-2">
                             <button type="button" class="btn btn-primary" th:if="${artworks.number > 0}"
                                 onclick="previousPage()">Prethodna stranica</button>
