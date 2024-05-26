@@ -9,5 +9,4 @@ public class ArtworkQueryDto {
     private String name;
     private String description;
     private String collectionName;
-
 }

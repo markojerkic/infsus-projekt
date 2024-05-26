@@ -83,7 +83,7 @@
 
                 <tr>
                     <td colspan="5">
-                        <nav class="flex justify-end gap-2">
+                        <nav class="flex justify-end gap-2" th:fragment="search-button">
                             <button type="button" class="btn btn-primary" th:if="${artists.number > 0}"
                                 onclick="previousPage()">Prethodna stranica</button>
                             <button type="button" class="btn btn-primary" th:if="${artists.hasNext}"
@@ -96,7 +96,7 @@
         </table>
     </div>
 
-    <script>
+    <script th:fragment="search-func">
         function previousPage() {
             document.querySelector('input[name="page"]').value = parseInt(document.querySelector('input[name="page"]').value) - 1;
             htmx.trigger('#search', 'search');

@@ -42,13 +42,16 @@ public class ArtistController {
 
     @GetMapping("/{id}")
     public String getArtistDetail(Model model, @PathVariable Long id,
-            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            @PageableDefault(sort = "id", direction = Sort.Direction.DESC, size = 2) Pageable pageable,
             ArtworkQueryDto query) {
         var artist = this.artistService.getArtistById(id);
         var artworks = this.artworkService.findAllArtworks(id, pageable, query);
 
         model.addAttribute("artist", artist);
         model.addAttribute("artworks", artworks);
+        model.addAttribute("search", query);
+        model.addAttribute("pageable", pageable);
+
         return "artist/detail";
     }
 
