@@ -60,7 +60,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="artwork : ${artworks}"
+                <tr th:each="artwork : ${artworks.content}"
                     class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         <a th:text="${artwork.id}" th:href="@{'/artwork/' + ${artwork.id}}"></a>
@@ -71,7 +71,8 @@
                         <a th:text="${artwork.url}" th:href="${artwork.url}"></a>
                     </td>
                     <td class="px-6 py-4">
-                        <a th:text="${artwork.collectionName}" th:href="@{'collection/' + ${artwork.collectionId}}"></a>
+                        <a th:text="${artwork.collection.name}"
+                            th:href="@{'collection/' + ${artwork.collection.id}}"></a>
                     </td>
 
                     <td><a th:href="@{'/artwork/edit/' + ${artwork.id} + '?returnUrl=/artist/' +${artist.id}}" class="text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:ring-yellow-300

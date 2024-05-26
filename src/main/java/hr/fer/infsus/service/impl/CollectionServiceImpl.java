@@ -33,6 +33,16 @@ public class CollectionServiceImpl implements CollectionService {
                 .orElseThrow(() -> new IllegalArgumentException("Collection with id " + id + " not found"));
     }
 
+    @Override
+    public Collection saveCollection(Collection collection) {
+        var col = Collection.builder()
+                .name(collection.getName())
+                .description(collection.getDescription())
+                .build();
+
+        return this.collectionRepository.save(col);
+    }
+
     private Specification<Collection> search(Optional<String> name) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();

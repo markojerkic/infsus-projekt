@@ -10,5 +10,7 @@ import org.springframework.data.domain.Pageable;
 public interface CollectionService {
     Page<Collection> getAllCollections(Optional<String> name, Pageable pageable);
 
+    Collection saveCollection(Collection collection);
+
     Collection getCollectionById(Long id);
 }

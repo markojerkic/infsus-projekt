@@ -24,7 +24,7 @@ public class Artwork {
     @Column(nullable = false)
     private String description;
 
-    @Column(nullable = false, unique = true)
+    @Column
     private String url;
 
     @ManyToOne(optional = false)
@@ -82,8 +82,10 @@ public class Artwork {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Artwork artwork = (Artwork) o;
         return Objects.equals(id, artwork.id);
     }
