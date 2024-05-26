@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" data-theme="dark" hx-boost="true">
+
+<head th:replace="fragments/layout.html :: headerfiles" />
+
+<body>
+    <header th:replace="fragments/layout.html :: header"></header>
+
+    <main class="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+            <div class="px-4 py-5 sm:px-6">
+                <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-200">Detalji umjetničkog rada</h3>
+
+
+                <div class="grid grid-cols-2 gap-4">
+
+                    <span>Naziv</span>
+                    <span th:text="${artwork.name}"></span>
+
+                    <span>Opis</span>
+                    <span th:text="${artwork.description}"></span>
+
+                    <span>Ime umjetnika</span>
+                    <span th:text="${artwork.artist.name}"></span>
+
+                    <span>Trajanje videa</span>
+                    <span th:text="@{{duration} ms(duration=${video.duration})}"></span>
+
+                    <span>Preuzite video</span>
+                    <a th:href="@{/artwork/video/{id}(id=${video.id})}" class="text-blue-700" rel="noopener noreferrer"
+                        target="_blank">Preuzmi</a>
+
+                </div>
+
+
+            </div>
+        </div>
+    </main>
+
+</body>
+
+</html>

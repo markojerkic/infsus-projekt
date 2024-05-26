@@ -1,5 +1,7 @@
 package hr.fer.infsus.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import hr.fer.infsus.dto.query.CollectionQueryDto;
 import hr.fer.infsus.exception.ValidationException;
@@ -41,6 +44,28 @@ public class ArtworkController {
     private final CollectionService collectionService;
     private final GenreService genreService;
     private final VideoService videoService;
+
+    @GetMapping("/{id}")
+    public String getArtwork(Model model, @PathVariable Long id) {
+        var artwork = this.artworkService.getById(id);
+        var video = this.videoService.getVideoByArtworkId(id);
+        model.addAttribute("artwork", artwork);
+        model.addAttribute("video", video);
+
+        return "artwork/view";
+    }
+
+    @GetMapping("/video/{id}")
+    @ResponseBody
+    public byte[] getVideoFile(@PathVariable Long id, HttpServletResponse response) throws IOException {
+        var video = this.videoService.getVideoById(id);
+        var videoFile = this.videoService.getVideoFile(id);
+
+        response.setContentType(Files.probeContentType(videoFile.toPath()));
+        response.setHeader("Content-Disposition", "attachment; filename=" + videoFile.getName());
+
+        return Files.readAllBytes(videoFile.toPath());
+    }
 
     @GetMapping("/{artistId}/new")
     public String getNewArtwork(Model model, @PathVariable Long artistId) {
