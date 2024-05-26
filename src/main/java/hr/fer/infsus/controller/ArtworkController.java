@@ -1,9 +1,11 @@
 package hr.fer.infsus.controller;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -115,6 +117,15 @@ public class ArtworkController {
         this.artworkService.saveArtwork(id, artworkForm);
 
         return String.format("redirect:/artist/%d", artistId);
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteArtwork(@PathVariable Long id, Model model) {
+        this.artworkService.deleteArtwork(id);
+        model.addAttribute("artworks", Page.empty());
+
+        return "artist/detail :: search-items";
+
     }
 
 }
