@@ -1,5 +1,6 @@
 package hr.fer.infsus.controller;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -103,9 +104,11 @@ public class ArtistController {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteArtist(@PathVariable Long id) {
+    public String deleteArtist(@PathVariable Long id, Model model) {
         artistService.deleteArtist(id);
-        return "redirect:/artist";
+        model.addAttribute("artists", Page.empty());
+
+        return "artist/artists :: search-items";
     }
 
 }
