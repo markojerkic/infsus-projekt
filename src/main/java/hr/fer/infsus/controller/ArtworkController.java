@@ -9,18 +9,20 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import hr.fer.infsus.dto.query.CollectionQueryDto;
 import hr.fer.infsus.forms.ArtworkForm;
-import hr.fer.infsus.model.Artwork;
 import hr.fer.infsus.service.ArtworkService;
 import hr.fer.infsus.service.CollectionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("/artwork")
 @RequiredArgsConstructor
+@Slf4j
 public class ArtworkController {
     private final ArtworkService artworkService;
     private final CollectionService collectionService;
@@ -58,8 +60,14 @@ public class ArtworkController {
     @PostMapping("/{artistId}/new")
     public String createArtwork(Model model,
             @PathVariable Long artistId,
+            @RequestParam(name = "cancel", defaultValue = "false") boolean cancel,
             @Valid @ModelAttribute("artwork") ArtworkForm artworkForm,
             BindingResult bindingResult) {
+
+        if (cancel) {
+            log.info("Canceling creation of artwork with artist id {}", artistId);
+            return String.format("redirect:/artist/%d", artistId);
+        }
 
         if (bindingResult.hasErrors()) {
             var collections = this.collectionService.getAllCollections(new CollectionQueryDto(), PageRequest.of(0, 25));
@@ -73,7 +81,7 @@ public class ArtworkController {
             return "artwork/new";
         }
 
-        Artwork artwork = this.artworkService.createArtwork(artworkForm);
+        this.artworkService.createArtwork(artworkForm);
 
         return String.format("redirect:/artist/%d", artistId);
     }
@@ -82,8 +90,14 @@ public class ArtworkController {
     public String updateArtwork(Model model,
             @PathVariable Long id,
             @PathVariable Long artistId,
+            @RequestParam(name = "cancel", defaultValue = "false") boolean cancel,
             @Valid @ModelAttribute("artwork") ArtworkForm artworkForm,
             BindingResult bindingResult) {
+
+        if (cancel) {
+            log.info("Canceling edit of artwork with id {}", id);
+            return String.format("redirect:/artist/%d", artistId);
+        }
 
         if (bindingResult.hasErrors()) {
             var collections = this.collectionService.getAllCollections(new CollectionQueryDto(), PageRequest.of(0, 25));

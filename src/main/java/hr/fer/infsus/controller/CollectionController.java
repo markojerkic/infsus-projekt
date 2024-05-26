@@ -2,6 +2,8 @@ package hr.fer.infsus.controller;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,7 +39,9 @@ public class CollectionController {
     }
 
     @GetMapping
-    public String allCollections(Model model, Pageable pageable, CollectionQueryDto query) {
+    public String allCollections(Model model,
+            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            CollectionQueryDto query) {
         var collections = this.collectionService.getAllCollections(query, pageable);
         model.addAttribute("collections", collections);
         model.addAttribute("search", query);

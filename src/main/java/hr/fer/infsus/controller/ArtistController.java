@@ -1,6 +1,7 @@
 package hr.fer.infsus.controller;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,14 +13,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import hr.fer.infsus.dto.artist.ArtistDto;
 import hr.fer.infsus.dto.artist.NewArtistDto;
 import hr.fer.infsus.dto.query.ArtistQueryDto;
 import hr.fer.infsus.dto.query.ArtworkQueryDto;
 import hr.fer.infsus.exception.ValidationException;
-import hr.fer.infsus.model.Artist;
 import hr.fer.infsus.service.ArtistService;
 import hr.fer.infsus.service.ArtworkService;
 import hr.fer.infsus.util.HtmxRequestUtil;
@@ -43,7 +41,7 @@ public class ArtistController {
 
     @GetMapping("/{id}")
     public String getArtistDetail(Model model, @PathVariable Long id,
-            Pageable pageable,
+            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
             ArtworkQueryDto query) {
         var artist = this.artistService.getArtistById(id);
         var artworks = this.artworkService.findAllArtworks(id, pageable, query);
@@ -54,7 +52,9 @@ public class ArtistController {
     }
 
     @GetMapping
-    public String allArtists(Model model, Pageable pageable, @ModelAttribute ArtistQueryDto query) {
+    public String allArtists(Model model,
+            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            @ModelAttribute ArtistQueryDto query) {
 
         var artists = this.artistService.findAllArtists(pageable, query);
 

@@ -3,6 +3,7 @@ package hr.fer.infsus.controller;
 import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -32,7 +33,7 @@ public class GenreController {
     private final GenreService genreService;
 
     @GetMapping
-    public String index(@PageableDefault Pageable pageable,
+    public String index(@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
             Optional<String> name,
             Optional<String> description,
             ModelMap model,
