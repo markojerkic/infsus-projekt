@@ -22,6 +22,8 @@ import hr.fer.infsus.exception.ValidationException;
 import hr.fer.infsus.model.Artist;
 import hr.fer.infsus.service.ArtistService;
 import hr.fer.infsus.service.ArtworkService;
+import hr.fer.infsus.util.HtmxRequestUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -84,16 +86,20 @@ public class ArtistController {
 
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/edit/{id}")
     public String editArtist(@PathVariable Long id, @Valid @ModelAttribute("artist") NewArtistDto artist,
             BindingResult bindingResult,
-            Model model) {
+            Model model, HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             return "artist/edit";
         }
         var savedArtist = this.artistService.saveArtist(id, artist);
-        model.addAttribute("artist", savedArtist);
-        return "artist/detail :: artist-form";
+        if (HtmxRequestUtil.isHtmxRequest(request)) {
+            model.addAttribute("artist", savedArtist);
+            return "artist/detail :: artist-form";
+        }
+
+        return "redirect:/artist";
     }
 
     @DeleteMapping("/{id}")

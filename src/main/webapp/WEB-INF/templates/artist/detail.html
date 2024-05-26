@@ -6,7 +6,7 @@
 <body>
     <header th:replace="fragments/layout.html :: header"></header>
 
-    <form class="w-full max-w-sm" th:insert="artist/new :: artist-edit" th:hx-post="@{{id}(id=${artist.id})}"
+    <form class="w-full max-w-sm" th:insert="artist/new :: artist-edit" th:hx-post="@{/artist/edit/{id}(id=${artist.id})}"
         th:fragment="artist-form">
         <input type="hidden" th:field="*{id}" id="id" />
     </form>
