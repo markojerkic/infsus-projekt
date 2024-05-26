@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" data-theme="dark" hx-boost="true">
+
+<head th:replace="fragments/layout.html :: headerfiles">
+
+<body>
+    <header th:replace="fragments/layout.html :: header"></header>
+
+    <form method="post" th:action="@{/collection/edit/{id}(id=${id})}" th:object="${collection}" class="w-full max-w-sm"
+        th:insert="collection/new :: collection-edit" th:in>
+    </form>
+</body>
+
+</html>

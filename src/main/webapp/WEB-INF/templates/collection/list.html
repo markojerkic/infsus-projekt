@@ -8,45 +8,31 @@
 
 
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg p-2">
-        <a href="artist/new" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300
+        <a href="collection/new" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300
      font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600
-     dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Novi umjetnik</a>
+     dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Nova zbirka</a>
         <br><br />
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <th scope="col" class="px-6 py-3">
-                        Ime
+                        Naziv
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Prezime
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Korisnicko ime
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Vrsta
+                        Opis
                     </th>
                     <th colspan="3" scope="col" class="px-6 py-3">
                     </th>
                 </tr>
                 <tr th:object="${search}">
-                    <form hx-get="/artist" hx-select="#artists" hx-target="#artists" hx-swap="outerHTML"
-                        hx-push-url="true" hx-trigger="input from:input delay:500ms" id="search">
+                    <form hx-get="/collection" hx-select="#collections" hx-target="#collections" hx-swap="outerHTML"
+                        hx-push-url="true" hx-trigger="input from:input delay:500ms, search" id="search">
                         <th scope="col" class="px-6 py-3">
-                            <input class="input" type="text" name="name" placeholder="Ime" th:value="*{name}" />
+                            <input class="input" type="text" name="name" placeholder="Naziv" th:value="*{name}" />
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            <input class="input" type="text" name="lastname" placeholder="Prezime"
-                                th:value="*{lastname}" />
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            <input class="input" type="text" name="username" placeholder="Korisničko ime"
-                                th:value="*{username}" />
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            <input class="input" type="text" name="type" placeholder="Vrsta umjetnika"
-                                th:value="*{type}" />
+                            <input class="input" type="text" name="description" placeholder="Opis"
+                                th:value="*{description}" />
                         </th>
                         <th colspan="3" scope="col" class="px-6 py-3">
                         </th>
@@ -54,36 +40,39 @@
                     </form>
                 </tr>
             </thead>
-            <tbody id="artists">
-                <tr th:each="artist : ${artists}"
+            <tbody id="collections">
+                <tr th:each="collection : ${collections}" th:data-id="${collection.id}"
                     class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                    <td th:text="${artist.name}" class="px-6 py-4">
+                    <td th:text="${collection.name}" class="px-6 py-4" th:fragment="collection-items">
 
-                    <td th:text="${artist.lastname}" class="px-6 py-4">
-                    <td th:text="${artist.username}" class="px-6 py-4">
-                    <td th:text="${artist.type}" class="px-6 py-4">
+                    <td th:text="${collection.description}" class="px-6 py-4">
 
-                    <td><a th:href="@{'artist/' + ${artist.id}}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300
+                    <td><a th:href="@{'collection/' + ${collection.id}}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300
         font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600
         dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Pregledaj</a></td>
 
-                    <td><a th:href=" @{'artist/edit/' + ${artist.id}}" class="text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:ring-yellow-300
+                    <td><a th:href=" @{'collection/edit/' + ${collection.id}}" class="text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:ring-yellow-300
      font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-yellow-600
      dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Uredi</a></td>
                     <td>
 
-                        <a th:href="@{'artist/' + ${artist.id}}" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300
+                        <button type="submit" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300
      font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-600
-     dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">Delete</a>
+                                    dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800"
+                            th:hx-target="@{tr[data-id='{id}'](id=${collection.id})}" hx-swap="outerHTML"
+                            hx-trigger="click"
+                            th:hx-delete="@{/collection/{id}(id=${collection.id})}">Izbrišite</button>
+
+
                     </td>
                 </tr>
 
                 <tr>
                     <td colspan="5">
                         <nav class="flex justify-end gap-2">
-                            <button type="button" class="btn btn-primary" th:if="${artists.number > 0}"
+                            <button type="button" class="btn btn-primary" th:if="${collections.number > 0}"
                                 onclick="previousPage()">Prethodna stranica</button>
-                            <button type="button" class="btn btn-primary" th:if="${artists.hasNext}"
+                            <button type="button" class="btn btn-primary" th:if="${collections.hasNext}"
                                 onclick="nextPage()">Sljedeća stranica</button>
                         </nav>
                     </td>
