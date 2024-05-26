@@ -1,20 +1,22 @@
 package hr.fer.infsus.service;
 
-import hr.fer.infsus.dto.ArtworkDto;
-import hr.fer.infsus.forms.ArtworkForm;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
+import hr.fer.infsus.dto.query.ArtworkQueryDto;
+import hr.fer.infsus.forms.ArtworkForm;
+import hr.fer.infsus.model.Artwork;
 
 public interface ArtworkService {
-    List<ArtworkDto> findAllArtworks();
+    Page<Artwork> findAllArtworks(Long artistId, Pageable pageable, ArtworkQueryDto query);
 
-    Long saveArtwork(ArtworkForm artworkForm);
+    Page<Artwork> findAllArtworks(Pageable pageable, ArtworkQueryDto query);
 
-    Long createArtwork(ArtworkForm artworkForm);
+    Artwork getById(Long id);
 
-    ArtworkDto findById(Long id);
+    Artwork saveArtwork(ArtworkForm artworkForm);
+
+    Artwork createArtwork(ArtworkForm artworkForm);
 
     void deleteArtwork(Long id);
-
-    List<ArtworkDto> findByName(String s);
 }

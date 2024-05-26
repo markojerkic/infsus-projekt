@@ -17,19 +17,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import hr.fer.infsus.dto.artist.ArtistDto;
 import hr.fer.infsus.dto.artist.NewArtistDto;
 import hr.fer.infsus.dto.query.ArtistQueryDto;
+import hr.fer.infsus.dto.query.ArtworkQueryDto;
 import hr.fer.infsus.exception.ValidationException;
+import hr.fer.infsus.model.Artist;
 import hr.fer.infsus.service.ArtistService;
+import hr.fer.infsus.service.ArtworkService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("/artist")
 @RequiredArgsConstructor
-@Slf4j
 public class ArtistController {
 
     private final ArtistService artistService;
+    private final ArtworkService artworkService;
 
     @GetMapping("/new")
     public String getNewArtist(Model model) {
@@ -39,21 +41,18 @@ public class ArtistController {
 
     @GetMapping("/{id}")
     public String getArtistDetail(Model model, @PathVariable Long id,
-            @RequestParam(name = "query", required = false) String query) {
-        return null;
-        // ArtistDto artist = artistService.findArtistById(id, query);
-        //
-        // if (query == null) {
-        // query = "";
-        //
-        // }
-        // model.addAttribute("artist", artist);
-        // model.addAttribute("search", new SearchQuery(query));
-        // return "artist/detail";
+            Pageable pageable,
+            ArtworkQueryDto query) {
+        var artist = this.artistService.getArtistById(id);
+        var artworks = this.artworkService.findAllArtworks(id, pageable, query);
+
+        model.addAttribute("artist", artist);
+        model.addAttribute("artworks", artworks);
+        return "artist/detail";
     }
 
     @GetMapping
-    public String allArtists(Model model, @PageableDefault(size=2) Pageable pageable, @ModelAttribute ArtistQueryDto query) {
+    public String allArtists(Model model, Pageable pageable, @ModelAttribute ArtistQueryDto query) {
 
         var artists = this.artistService.findAllArtists(pageable, query);
 
@@ -85,13 +84,16 @@ public class ArtistController {
 
     }
 
-    @PostMapping("/edit")
-    public String editArtist(@Valid @ModelAttribute("artist") ArtistDto artist, BindingResult bindingResult,
-            @RequestParam(value = "returnUrl", defaultValue = "/artist") String returnUrl) {
-        if (bindingResult.hasErrors())
+    @PostMapping("/{id}")
+    public String editArtist(@PathVariable Long id, @Valid @ModelAttribute("artist") NewArtistDto artist,
+            BindingResult bindingResult,
+            Model model) {
+        if (bindingResult.hasErrors()) {
             return "artist/edit";
-        artistService.saveArtist(artist);
-        return "redirect:" + returnUrl;
+        }
+        var savedArtist = this.artistService.saveArtist(id, artist);
+        model.addAttribute("artist", savedArtist);
+        return "artist/detail :: artist-form";
     }
 
     @DeleteMapping("/{id}")

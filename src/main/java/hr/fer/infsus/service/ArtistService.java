@@ -17,7 +17,7 @@ public interface ArtistService {
 
     Long createArtist(NewArtistDto artist);
 
-    Long saveArtist(ArtistDto artistDto);
+    Artist saveArtist(Long id, NewArtistDto artistDto);
 
     void deleteArtist(Long id);
 

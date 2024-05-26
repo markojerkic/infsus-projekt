@@ -6,12 +6,12 @@
 <body>
     <header th:replace="fragments/layout.html :: header"></header>
 
-    <a href="artist/new" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300
+
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg p-2">
+        <a href="artist/new" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300
      font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600
      dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Novi umjetnik</a>
-    <br><br />
-
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <br><br />
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
@@ -27,9 +27,7 @@
                     <th scope="col" class="px-6 py-3">
                         Vrsta
                     </th>
-                    <th scope="col" class="px-6 py-3">
-                    </th>
-                    <th scope="col" class="px-6 py-3">
+                    <th colspan="3" scope="col" class="px-6 py-3">
                     </th>
                 </tr>
                 <tr th:object="${search}">
@@ -50,9 +48,7 @@
                             <input class="input" type="text" name="type" placeholder="Vrsta umjetnika"
                                 th:value="*{type}" />
                         </th>
-                        <th scope="col" class="px-6 py-3">
-                        </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th colspan="3" scope="col" class="px-6 py-3">
                         </th>
                         <input type="hidden" name="page" th:value="${pageable.pageNumber}" />
                     </form>
@@ -67,14 +63,18 @@
                     <td th:text="${artist.username}" class="px-6 py-4">
                     <td th:text="${artist.type}" class="px-6 py-4">
 
-                    <td><a th:href="@{'artist/edit/' + ${artist.id}}" class="text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:ring-yellow-300
+                    <td><a th:href="@{'artist/' + ${artist.id}}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300
+        font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600
+        dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Pregledaj</a></td>
+
+                    <td><a th:href=" @{'artist/edit/' + ${artist.id}}" class="text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:ring-yellow-300
      font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-yellow-600
-     dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Edit</a></td>
+     dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Uredi</a></td>
                     <td>
 
-                        <a th:href="@{'artist/delete/' + ${artist.id}}" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300
+                        <a th:href="@{'artist/' + ${artist.id}}" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300
      font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-600
-     dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800"> Delete</a>
+     dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">Delete</a>
                     </td>
                 </tr>
 

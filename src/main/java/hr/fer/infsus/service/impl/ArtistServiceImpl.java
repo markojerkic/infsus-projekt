@@ -1,14 +1,12 @@
 package hr.fer.infsus.service.impl;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import hr.fer.infsus.dto.artist.ArtistDto;
 import hr.fer.infsus.dto.artist.NewArtistDto;
 import hr.fer.infsus.dto.query.ArtistQueryDto;
 import hr.fer.infsus.exception.ValidationException;
@@ -59,16 +57,17 @@ public class ArtistServiceImpl implements ArtistService {
     }
 
     @Override
-    public Long saveArtist(ArtistDto artistDto) {
-        var artist = new Artist();
-        artist.setType(artist.getType());
-        artist.setName(artist.getName());
-        artist.setLastname(artist.getLastname());
-        artist.setUsername(artist.getUsername());
+    public Artist saveArtist(Long id, NewArtistDto artistDto) {
 
-        this.artistRepository.save(artist);
+        var artist = this.artistRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("No artist with id " + id));
 
-        return artist.getId();
+        artist.setType(artistDto.getType());
+        artist.setName(artistDto.getName());
+        artist.setLastname(artistDto.getLastname());
+        artist.setUsername(artistDto.getUsername());
+
+        return this.artistRepository.save(artist);
     }
 
     @Override
