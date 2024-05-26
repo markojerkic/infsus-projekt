@@ -7,7 +7,8 @@
     <header th:replace="fragments/layout.html :: header"></header>
 
     <form method="post" th:action="@{/artwork/{artistId}/edit/{id}(id=${id},artistId=${artistId})}"
-        id="edit-artwork-form" th:object="${artwork}" class="w-full max-w-sm" th:insert="artwork/new :: artwork-edit">
+        enctype="multipart/form-data" id="edit-artwork-form" th:object="${artwork}" class="w-full max-w-lg"
+        th:insert="artwork/new :: artwork-edit">
     </form>
 </body>
 

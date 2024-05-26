@@ -7,7 +7,7 @@
     <header th:replace="fragments/layout.html :: header"></header>
 
     <form role="form" method="post" th:object="${artwork}" th:action="@{/artwork/{artistId}/new(artistId=${artistId})}"
-        class="w-full max-w-sm" id="artwork-form">
+        class="w-full max-w-lg" id="artwork-form" enctype="multipart/form-data">
         <div th:fragment="artwork-edit">
 
             <input type="hidden" name="artistId" th:field="*{artistId}">
@@ -57,7 +57,6 @@
             </div>
 
             <div class="md:flex md:items-center mb-6">
-
                 <label class="block mb-2 text-sm font-medium text-white-500">Odaberite kolekciju</label>
                 <select th:field="*{collectionId}" name="collectionId"
                     class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500">
@@ -65,15 +64,18 @@
                         th:text="${collection.name}">
                     </option>
                 </select>
-
             </div>
+
+            <div th:replace="artwork/video/form :: video-form">
+            </div>
+
 
             <div class="flex gap-2 justify-end">
 
                 <button type="button"
                     class="shadow bg-red-500 hover:bg-red-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
                     name="cancel" value="true" th:hx-post="@{/artwork/{artistId}/new(artistId=${artistId})}"
-                    hx-target="closest body">
+                    hx-target="closest body" hx-select="body">
                     Odustani
                 </button>
 

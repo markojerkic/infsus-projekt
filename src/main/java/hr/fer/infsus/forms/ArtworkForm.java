@@ -1,6 +1,7 @@
 package hr.fer.infsus.forms;
 
 import hr.fer.infsus.model.Artwork;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,10 @@ public class ArtworkForm {
 
     private Long collectionId;
 
+    @NotNull
+    @Valid
+    private VideoForm video;
+
     public ArtworkForm(Artwork artwork) {
         this.id = artwork.getId();
         this.name = artwork.getName();
@@ -38,6 +43,7 @@ public class ArtworkForm {
         if (artwork.getCollection() != null) {
             this.collectionId = artwork.getCollection().getId();
         }
+        //this.video = videoForm;
     }
 
 }

@@ -1,6 +1,8 @@
 package hr.fer.infsus.service.impl;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,16 +10,16 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import hr.fer.infsus.dto.query.ArtworkQueryDto;
+import hr.fer.infsus.exception.ValidationException;
 import hr.fer.infsus.forms.ArtworkForm;
-import hr.fer.infsus.model.Artist;
 import hr.fer.infsus.model.Artwork;
-import hr.fer.infsus.model.Collection;
-import hr.fer.infsus.repository.ArtistRepository;
+import hr.fer.infsus.model.types.Video;
 import hr.fer.infsus.repository.ArtworkRepository;
-import hr.fer.infsus.repository.CollectionRepository;
 import hr.fer.infsus.service.ArtistService;
 import hr.fer.infsus.service.ArtworkService;
 import hr.fer.infsus.service.CollectionService;
+import hr.fer.infsus.service.VideoService;
+import hr.fer.infsus.service.sif.GenreService;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 
@@ -28,6 +30,7 @@ public class ArtworkServiceImpl implements ArtworkService {
     private final ArtworkRepository artworkRepository;
     private final ArtistService artistService;
     private final CollectionService collectionService;
+    private final VideoService videoService;
 
     @Override
     public Page<Artwork> findAllArtworks(Long artistId, Pageable pageable, ArtworkQueryDto query) {
@@ -60,7 +63,10 @@ public class ArtworkServiceImpl implements ArtworkService {
 
         artist.getArtworks().add(artwork);
 
-        return this.artworkRepository.save(artwork);
+        var savedArtwork = this.artworkRepository.save(artwork);
+        this.videoService.saveVideo(savedArtwork, artworkForm.getVideo());
+
+        return savedArtwork;
     }
 
     @Override
@@ -77,7 +83,10 @@ public class ArtworkServiceImpl implements ArtworkService {
         artwork.setCollection(collection);
         artwork.setUrl(artworkForm.getUrl());
 
-        return this.artworkRepository.save(artwork);
+        var savedArtwork = this.artworkRepository.save(artwork);
+        this.videoService.saveVideo(savedArtwork, artworkForm.getVideo());
+
+        return savedArtwork;
     }
 
     @Override

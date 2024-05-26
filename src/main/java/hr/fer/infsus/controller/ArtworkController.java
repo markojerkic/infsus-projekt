@@ -1,10 +1,13 @@
 package hr.fer.infsus.controller;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -14,9 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import hr.fer.infsus.dto.query.CollectionQueryDto;
+import hr.fer.infsus.exception.ValidationException;
 import hr.fer.infsus.forms.ArtworkForm;
+import hr.fer.infsus.forms.VideoForm;
 import hr.fer.infsus.service.ArtworkService;
 import hr.fer.infsus.service.CollectionService;
+import hr.fer.infsus.service.sif.GenreService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,17 +34,23 @@ import lombok.extern.slf4j.Slf4j;
 public class ArtworkController {
     private final ArtworkService artworkService;
     private final CollectionService collectionService;
+    private final GenreService genreService;
 
     @GetMapping("/{artistId}/new")
     public String getNewArtwork(Model model, @PathVariable Long artistId) {
 
         var collections = this.collectionService.getAllCollections(new CollectionQueryDto(), PageRequest.of(0, 25));
+        var genres = this.genreService.getGenres(PageRequest.of(0, 25), Optional.empty(), Optional.empty());
+
+        var videoForm = new VideoForm();
         var artworkForm = new ArtworkForm();
+        artworkForm.setVideo(videoForm);
 
         artworkForm.setArtistId(artistId);
         model.addAttribute("artwork", artworkForm);
         model.addAttribute("collections", collections);
         model.addAttribute("artistId", artistId);
+        model.addAttribute("genres", genres);
 
         return "artwork/new";
     }
@@ -47,6 +59,8 @@ public class ArtworkController {
     public String getEditArtwork(Model model, @PathVariable Long id, @PathVariable Long artistId) {
 
         var collections = this.collectionService.getAllCollections(new CollectionQueryDto(), PageRequest.of(0, 25));
+        var genres = this.genreService.getGenres(PageRequest.of(0, 25), Optional.empty(), Optional.empty());
+
         var artwork = this.artworkService.getById(id);
         var artworkForm = new ArtworkForm(artwork);
 
@@ -55,6 +69,7 @@ public class ArtworkController {
         model.addAttribute("artwork", artworkForm);
         model.addAttribute("collections", collections);
         model.addAttribute("artistId", artistId);
+        model.addAttribute("genres", genres);
 
         return "artwork/edit";
     }
@@ -73,17 +88,35 @@ public class ArtworkController {
 
         if (bindingResult.hasErrors()) {
             var collections = this.collectionService.getAllCollections(new CollectionQueryDto(), PageRequest.of(0, 25));
+            var genres = this.genreService.getGenres(PageRequest.of(0, 25), Optional.empty(), Optional.empty());
 
             artworkForm.setArtistId(artistId);
 
             model.addAttribute("artwork", artworkForm);
             model.addAttribute("collections", collections);
             model.addAttribute("artistId", artistId);
+            model.addAttribute("genres", genres);
 
             return "artwork/new";
         }
 
-        this.artworkService.createArtwork(artworkForm);
+        try {
+            this.artworkService.createArtwork(artworkForm);
+        } catch (ValidationException e) {
+            var collections = this.collectionService.getAllCollections(new CollectionQueryDto(), PageRequest.of(0, 25));
+            var genres = this.genreService.getGenres(PageRequest.of(0, 25), Optional.empty(), Optional.empty());
+
+            artworkForm.setArtistId(artistId);
+
+            model.addAttribute("artwork", artworkForm);
+            model.addAttribute("collections", collections);
+            model.addAttribute("artistId", artistId);
+            model.addAttribute("genres", genres);
+
+            bindingResult.addError(new FieldError("artwork", e.getFieldName(), e.getMessage()));
+
+            return "artwork/edit";
+        }
 
         return String.format("redirect:/artist/%d", artistId);
     }
@@ -103,6 +136,7 @@ public class ArtworkController {
 
         if (bindingResult.hasErrors()) {
             var collections = this.collectionService.getAllCollections(new CollectionQueryDto(), PageRequest.of(0, 25));
+            var genres = this.genreService.getGenres(PageRequest.of(0, 25), Optional.empty(), Optional.empty());
 
             artworkForm.setArtistId(artistId);
 
@@ -110,11 +144,29 @@ public class ArtworkController {
             model.addAttribute("artwork", artworkForm);
             model.addAttribute("collections", collections);
             model.addAttribute("artistId", artistId);
+            model.addAttribute("genres", genres);
 
             return "artwork/edit";
         }
 
-        this.artworkService.saveArtwork(id, artworkForm);
+        try {
+            this.artworkService.saveArtwork(id, artworkForm);
+        } catch (ValidationException e) {
+            var collections = this.collectionService.getAllCollections(new CollectionQueryDto(), PageRequest.of(0, 25));
+            var genres = this.genreService.getGenres(PageRequest.of(0, 25), Optional.empty(), Optional.empty());
+
+            artworkForm.setArtistId(artistId);
+
+            model.addAttribute("id", id);
+            model.addAttribute("artwork", artworkForm);
+            model.addAttribute("collections", collections);
+            model.addAttribute("artistId", artistId);
+            model.addAttribute("genres", genres);
+
+            bindingResult.addError(new FieldError("artwork", e.getFieldName(), e.getMessage()));
+
+            return "artwork/edit";
+        }
 
         return String.format("redirect:/artist/%d", artistId);
     }
