@@ -14,7 +14,7 @@ public interface ArtworkService {
 
     Artwork getById(Long id);
 
-    Artwork saveArtwork(ArtworkForm artworkForm);
+    Artwork saveArtwork(Long id, ArtworkForm artworkForm);
 
     Artwork createArtwork(ArtworkForm artworkForm);
 

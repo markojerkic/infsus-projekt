@@ -64,40 +64,20 @@ public class ArtworkServiceImpl implements ArtworkService {
     }
 
     @Override
-    public Artwork saveArtwork(ArtworkForm artworkForm) {
-        return null;
+    public Artwork saveArtwork(Long id, ArtworkForm artworkForm) {
+        var artwork = this.artworkRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("No artwork with id " + id));
 
-        // Artwork artwork = artworkRepository.findById(artworkForm.getId())
-        // .orElseThrow(() -> new IllegalStateException("No artwork with id " +
-        // artworkForm.getId()));
-        // Artist artist = artisRepository.findById(artworkForm.getArtistId())
-        // .orElseThrow(() -> new IllegalStateException("No artist with id " +
-        // artworkForm.getArtistId()));
-        //
-        // Collection collection = null;
-        // if (artworkForm.getCollectionId() != null) {
-        // collection =
-        // collectionRepository.findById(artworkForm.getCollectionId()).orElseThrow(
-        // () -> new IllegalStateException("No collecetion with id " +
-        // artworkForm.getCollectionId()));
-        // }
-        //
-        //// artwork.getArtist().getArtworks().remove(artwork);
-        //// artwork.getArtist().getArtworks().add(artwork);
-        // artwork.setArtist(artist);
-        //
-        // if (artwork.getCollection() != null) {
-        // artwork.getCollection().getArtworks().remove(artwork);
-        // }
-        //
-        // artwork.setCollection(collection);
-        // artwork.setName(artworkForm.getName());
-        // artwork.setUrl(artworkForm.getUrl());
-        // artwork.setDescription(artworkForm.getDescription());
-        //
-        // artworkRepository.save(artwork);
-        //
-        // return artworkForm.getId();
+        var artist = this.artistService.getArtistById(artworkForm.getArtistId());
+        var collection = this.collectionService.getCollectionById(artworkForm.getCollectionId());
+
+        artwork.setName(artworkForm.getName());
+        artwork.setDescription(artworkForm.getDescription());
+        artwork.setArtist(artist);
+        artwork.setCollection(collection);
+        artwork.setUrl(artworkForm.getUrl());
+
+        return this.artworkRepository.save(artwork);
     }
 
     @Override

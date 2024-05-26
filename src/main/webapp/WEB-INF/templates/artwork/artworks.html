@@ -92,9 +92,10 @@
                         <a th:text="${artwork.collectionName}" th:href="@{'collection/' + ${artwork.collectionId}}"></a>
                     </td>
 
-                    <td><a th:href="@{'artwork/edit/' + ${artwork.id} + '?returnUrl=/artwork'}" class="text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:ring-yellow-300
+                    <td><a th:href="@{/artwork/{artistId}/edit/{id}(artistId=${artwork.artist.id}, id=${artwork.id})}"
+                            class="text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:ring-yellow-300
      font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-yellow-600
-     dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Edit</a></td>
+     dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Uredi djelo</a></td>
                     <td>
 
                         <a th:href="@{'artwork/delete/' + ${artwork.id} + '?returnUrl=/artwork'}" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300
