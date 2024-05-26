@@ -1,8 +1,6 @@
 package hr.fer.infsus.service.impl;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,16 +8,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import hr.fer.infsus.dto.query.ArtworkQueryDto;
-import hr.fer.infsus.exception.ValidationException;
 import hr.fer.infsus.forms.ArtworkForm;
 import hr.fer.infsus.model.Artwork;
-import hr.fer.infsus.model.types.Video;
 import hr.fer.infsus.repository.ArtworkRepository;
 import hr.fer.infsus.service.ArtistService;
 import hr.fer.infsus.service.ArtworkService;
 import hr.fer.infsus.service.CollectionService;
 import hr.fer.infsus.service.VideoService;
-import hr.fer.infsus.service.sif.GenreService;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -60,8 +55,7 @@ public class ArtworkServiceImpl implements ArtworkService {
                 artworkForm.getName(),
                 artworkForm.getDescription(),
                 artist,
-                collection,
-                artworkForm.getUrl());
+                collection);
 
         artist.getArtworks().add(artwork);
 
@@ -84,7 +78,6 @@ public class ArtworkServiceImpl implements ArtworkService {
         artwork.setDescription(artworkForm.getDescription());
         artwork.setArtist(artist);
         artwork.setCollection(collection);
-        artwork.setUrl(artworkForm.getUrl());
 
         var savedArtwork = this.artworkRepository.save(artwork);
         this.videoService.saveVideo(savedArtwork, artworkForm.getVideo());

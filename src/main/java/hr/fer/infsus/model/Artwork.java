@@ -23,20 +23,16 @@ public class Artwork {
     @Column(nullable = false)
     private String description;
 
-    @Column
-    private String url;
-
     @ManyToOne(optional = false)
     private Artist artist;
     @ManyToOne
     private Collection collection;
 
-    public Artwork(String name, String description, Artist artist, Collection collection, String url) {
+    public Artwork(String name, String description, Artist artist, Collection collection) {
         this.name = name;
         this.description = description;
         this.artist = artist;
         this.collection = collection;
-        this.url = url;
     }
 
     public Long getId() {

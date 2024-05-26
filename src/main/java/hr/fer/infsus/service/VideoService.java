@@ -14,4 +14,6 @@ public interface VideoService {
 
     File getVideoFile(Long id);
 
+    Video getVideoByArtworkId(Long artworkId);
+
 }

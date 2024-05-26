@@ -20,11 +20,6 @@ public class ArtworkForm {
     @NotBlank(message = "Opis djela ne smije biti prazan")
     private String description;
 
-    // @Pattern(regexp = "http.?://s3.amazonaws.com/.+/.+", message = "URL mora
-    // voditi na Amazon AWS S3 bucket i biti oblika
-    // http.?://s3.amazonaws.com/.+/.+")
-    private String url;
-
     @NotNull(message = "ID umjetnika ne smije biti prazan")
     private Long artistId;
 
@@ -38,12 +33,10 @@ public class ArtworkForm {
         this.id = artwork.getId();
         this.name = artwork.getName();
         this.description = artwork.getDescription();
-        this.url = artwork.getUrl();
         this.artistId = artwork.getArtist().getId();
         if (artwork.getCollection() != null) {
             this.collectionId = artwork.getCollection().getId();
         }
-        //this.video = videoForm;
     }
 
 }

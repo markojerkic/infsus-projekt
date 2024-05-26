@@ -36,13 +36,6 @@ public class SpringWebConfig implements WebMvcConfigurer {
         return resolver;
     }
 
-    //@Bean
-    //public MultipartResolver multipartResolver() {
-    //    var multipartResolver = new Comon
-    //    multipartResolver.setMaxUploadSize(5000000);
-    //    return multipartResolver;
-    //}
-
     @Bean
     public ISpringTemplateEngine templateEngine() {
         // SpringTemplateEngine automatically applies SpringStandardDialect and

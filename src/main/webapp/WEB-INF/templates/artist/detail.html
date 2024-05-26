@@ -33,9 +33,6 @@
                         Naziv
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        URL
-                    </th>
-                    <th scope="col" class="px-6 py-3">
                         Naziv zbirke
                     </th>
                     <th scope="col" class="px-6 py-3">
@@ -52,9 +49,6 @@
                     </th>
                     <td th:text="${artwork.name}" class="px-6 py-4">
 
-                    <td class="px-6 py-4">
-                        <a th:text="${artwork.url}" th:href="${artwork.url}"></a>
-                    </td>
                     <td class="px-6 py-4">
                         <a th:text="${artwork.collection.name}"
                             th:href="@{'collection/' + ${artwork.collection.id}}"></a>

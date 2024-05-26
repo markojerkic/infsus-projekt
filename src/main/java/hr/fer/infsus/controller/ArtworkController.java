@@ -22,6 +22,7 @@ import hr.fer.infsus.forms.ArtworkForm;
 import hr.fer.infsus.forms.VideoForm;
 import hr.fer.infsus.service.ArtworkService;
 import hr.fer.infsus.service.CollectionService;
+import hr.fer.infsus.service.VideoService;
 import hr.fer.infsus.service.sif.GenreService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -36,6 +37,7 @@ public class ArtworkController {
     private final ArtworkService artworkService;
     private final CollectionService collectionService;
     private final GenreService genreService;
+    private final VideoService videoService;
 
     @GetMapping("/{artistId}/new")
     public String getNewArtwork(Model model, @PathVariable Long artistId) {
@@ -65,6 +67,10 @@ public class ArtworkController {
         var artwork = this.artworkService.getById(id);
         var artworkForm = new ArtworkForm(artwork);
 
+        var video = this.videoService.getVideoByArtworkId(id);
+        artworkForm.setVideo(
+                VideoForm.builder().duration(video.getDuration().toString() + "ms").build());
+
         artworkForm.setArtistId(artistId);
         model.addAttribute("id", id);
         model.addAttribute("artwork", artworkForm);
@@ -80,10 +86,10 @@ public class ArtworkController {
             @PathVariable Long artistId,
             @RequestParam(name = "cancel", defaultValue = "false") boolean cancel,
             @Valid @ModelAttribute("artwork") ArtworkForm artworkForm,
-            HttpServletResponse response,
-            BindingResult bindingResult) {
+            BindingResult bindingResult,
+            HttpServletResponse response) {
 
-        if (cancel) {
+        if ((bindingResult.hasErrors() && cancel) || cancel) {
             log.info("Canceling creation of artwork with artist id {}", artistId);
             return String.format("redirect:/artist/%d", artistId);
         }
@@ -139,9 +145,14 @@ public class ArtworkController {
             @PathVariable Long artistId,
             @RequestParam(name = "cancel", defaultValue = "false") boolean cancel,
             @Valid @ModelAttribute("artwork") ArtworkForm artworkForm,
+            HttpServletResponse response,
             BindingResult bindingResult) {
 
-        if (cancel) {
+        if (bindingResult.hasErrors()) {
+            log.error("Invalid artwork form: {}", bindingResult);
+        }
+
+        if ((bindingResult.hasErrors() && cancel) || cancel) {
             log.info("Canceling edit of artwork with id {}", id);
             return String.format("redirect:/artist/%d", artistId);
         }
@@ -151,12 +162,19 @@ public class ArtworkController {
             var genres = this.genreService.getGenres(PageRequest.of(0, 25), Optional.empty(), Optional.empty());
 
             artworkForm.setArtistId(artistId);
+            var video = this.videoService.getVideoByArtworkId(id);
+            artworkForm.setVideo(
+                    VideoForm.builder().duration(video.getDuration().toString() + "ms").build());
 
             model.addAttribute("id", id);
             model.addAttribute("artwork", artworkForm);
             model.addAttribute("collections", collections);
             model.addAttribute("artistId", artistId);
             model.addAttribute("genres", genres);
+
+            response.addHeader("HX-Reselect", "#edit-artwork-form");
+            response.addHeader("HX-Retarget", "closest div");
+            response.addHeader("HX-Push-Url", "/artist/" + artistId);
 
             return "artwork/edit";
         }
@@ -168,6 +186,9 @@ public class ArtworkController {
             var genres = this.genreService.getGenres(PageRequest.of(0, 25), Optional.empty(), Optional.empty());
 
             artworkForm.setArtistId(artistId);
+            var video = this.videoService.getVideoByArtworkId(id);
+            artworkForm.setVideo(
+                    VideoForm.builder().duration(video.getDuration().toString() + "ms").build());
 
             model.addAttribute("id", id);
             model.addAttribute("artwork", artworkForm);
@@ -176,6 +197,10 @@ public class ArtworkController {
             model.addAttribute("genres", genres);
 
             bindingResult.addError(new FieldError("artwork", e.getFieldName(), e.getMessage()));
+
+            response.addHeader("HX-Reselect", "#edit-artwork-form");
+            response.addHeader("HX-Retarget", "closest div");
+            response.addHeader("HX-Push-Url", "/artist/" + artistId);
 
             return "artwork/edit";
         }

@@ -29,6 +29,8 @@ public class VideoServiceImpl implements VideoService {
     public Video saveVideo(Artwork artwork, VideoForm videoForm) {
         this.checkVideoIsCorrectFormat(videoForm);
 
+
+
         var video = Video.builder()
                 .artwork(artwork)
                 .duration(this.parseStringDurationToMs(videoForm.getDuration()))
@@ -37,12 +39,17 @@ public class VideoServiceImpl implements VideoService {
 
         this.saveVideoFile(videoForm).ifPresent(video::setPath);
 
-        return video;
+        return this.videoRepository.save(video);
     }
 
     @Override
     public Video getVideoById(Long id) {
         return this.videoRepository.findById(id).orElseThrow();
+    }
+
+    @Override
+    public Video getVideoByArtworkId(Long artworkId) {
+        return this.videoRepository.findByArtwork_Id(artworkId).orElseThrow();
     }
 
     @Override
